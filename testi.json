@@ -1,0 +1,454 @@
+{
+  "pietro:presentazione": {
+    "testo": "Ciao a tutti! Sto per cominciare la mia grande avventura nel Lumimondo!",
+    "voce": "pietro"
+  },
+  "narratore:benvenuto": {
+    "testo": "Benvenuto nel Lumimondo! Esplora le città, fai amicizia con i Lumini e sfida i Capi Palestra: diventa un vero Maestro Allenatore!",
+    "voce": "narratore"
+  },
+  "pietro:sogno": {
+    "testo": "Un giorno diventerò il più grande Maestro Allenatore di tutto il Lumimondo!",
+    "voce": "pietro"
+  },
+  "pietro:partenza": {
+    "testo": "Sei pronta, Pepole? La nostra avventura comincia adesso!",
+    "voce": "pietro"
+  },
+  "pietro:vittoria": {
+    "testo": "Ce l'abbiamo fatta! Bravissimi tutti!",
+    "voce": "pietro"
+  },
+  "pietro:medaglia": {
+    "testo": "La mia prima medaglia! Grazie Marina!",
+    "voce": "pietro"
+  },
+  "pepole:saluto1": {
+    "testo": "Bau-uff! Ci sono anch'io!",
+    "voce": "pepole"
+  },
+  "nonnatella:scrigno": {
+    "testo": "Ah, Pietro! Allora parti davvero. Ho qualcosa per te... uno scrigno che aspettava proprio te.",
+    "voce": "nonna"
+  },
+  "nonnatella:benedizione": {
+    "testo": "Vai pure, piccolo. Ricorda: il viaggio conta più della meta. E porta una giacca, che la sera rinfresca.",
+    "voce": "nonna"
+  },
+  "nonnatella:conta": {
+    "testo": "Prima di partire, contami quanti Lumini ci sono nel mio giardino. Un Maestro nota sempre i dettagli!",
+    "voce": "nonna"
+  },
+  "nonnatella:conta-ok": {
+    "testo": "Cinque! Proprio così. Hai occhio, piccolo Maestro!",
+    "voce": "nonna"
+  },
+  "nonnatella:saggezza": {
+    "testo": "Sai, troppa corrente fa saltare i fusibili. Anche con gli amici: meglio collaborare che strafare.",
+    "voce": "nonna"
+  },
+  "nonnatella:finale": {
+    "testo": "Lo sapevo fin dall'inizio che ce l'avresti fatta. Le nonne queste cose le sentono.",
+    "voce": "nonna"
+  },
+  "lauri:incontro": {
+    "testo": "Ciao Pietro! Sono Doda. Benvenuto nel mio giardino di Terraverde!",
+    "voce": "carlotta"
+  },
+  "lauri:stelline": {
+    "testo": "Vedi quelle stelline? Sono l'energia del Lumino. Quando finiscono è solo un po' stanco, niente paura!",
+    "voce": "pepole"
+  },
+  "lauri:cattura": {
+    "testo": "Guarda, un Lumino selvatico! Per fare amicizia lancia la Lumiball quando è un po' stanco. Più è stanco, più è facile!",
+    "voce": "pepole"
+  },
+  "lauri:brizzo-preso": {
+    "testo": "Evviva! Brizzo è il tuo primo amico catturato! Adesso fa parte della squadra!",
+    "voce": "pepole"
+  },
+  "lauri:tipi": {
+    "testo": "Attento! Il suo Lumino è proprio forte contro il tuo. Ma niente paura: se sei in difficoltà, chiamami in aiuto!",
+    "voce": "pepole"
+  },
+  "lauri:incoraggia": {
+    "testo": "Pensa bene alla mossa giusta. Ce la fai, te lo dico io!",
+    "voce": "pepole"
+  },
+  "pepole:come-giocare": {
+    "testo": "In battaglia tocca una mossa per agire: a sinistra ci sono gli attacchi, a destra le mosse di aiuto come la cura.",
+    "voce": "pepole"
+  },
+  "pepole:come-funziona": {
+    "testo": "Evviva, prima sfida vinta! Gli allenatori restano qui: puoi risfidarli quando vuoi per allenarti e diventare più forte. Adesso torniamo sulla mappa, l'avventura ci aspetta!",
+    "voce": "pepole"
+  },
+  "lauri:guscetto": {
+    "testo": "Bau! Sulla riva c'è un Guscetto selvatico! Lo vuoi come amico?",
+    "voce": "pepole"
+  },
+  "lauri:guscetto-preso": {
+    "testo": "Benissimo! Guscetto è un Lumino d'acqua tranquillo e prudente.",
+    "voce": "pepole"
+  },
+  "lauri:bracciate": {
+    "testo": "Per attraversare il lago bisogna nuotare bene. Conta le bracciate con me!",
+    "voce": "pepole"
+  },
+  "lauri:morale-aiuto": {
+    "testo": "Hai fatto bene a chiedere aiuto, Ale! Chiedere aiuto non è una debolezza: è da furbi!",
+    "voce": "pepole"
+  },
+  "nico:salvataggio": {
+    "testo": "Eccomi! Grazie Pietro, mi hai dato una mano. Mi ero sporto troppo per osservare i Lumini d'acqua.",
+    "voce": "bambino"
+  },
+  "nico:battuta": {
+    "testo": "Io e Buzzetto siamo una bella squadra: lui è veloce e io studio la mossa giusta al momento giusto.",
+    "voce": "bambino"
+  },
+  "nico:bracciate-ok": {
+    "testo": "Quattro bracciate, contate bene. Con un po' di ritmo il lago si attraversa senza problemi.",
+    "voce": "bambino"
+  },
+  "nico:scusa": {
+    "testo": "Avevi ragione, Pietro. La prossima volta guardo prima di muovermi. Grazie del consiglio.",
+    "voce": "bambino"
+  },
+  "nico:entusiasmo": {
+    "testo": "Bello! Rifacciamolo: voglio capire come migliorare ancora.",
+    "voce": "bambino"
+  },
+  "marina:intro": {
+    "testo": "Sono Marina, leader di Acquaverde. Sono seria ma giusta. Mostrami cosa sai fare!",
+    "voce": "carlotta"
+  },
+  "marina:medaglia": {
+    "testo": "Hai vinto con onore. Ti consegno la Medaglia Onda. Te la sei meritata!",
+    "voce": "carlotta"
+  },
+  "bimbo:sfida": {
+    "testo": "Ehi Pietro! Sfidiamoci! Il mio Lumino è fortissimo!",
+    "voce": "bambino"
+  },
+  "allenatore:1": {
+    "testo": "Sfida di allenamento! Vediamo come te la cavi!",
+    "voce": "bambino"
+  },
+  "allenatore:2": {
+    "testo": "Bravo! Ora prova con me, sono più forte!",
+    "voce": "bambino"
+  },
+  "allenatrice:1": {
+    "testo": "Sfida di allenamento! Vediamo come te la cavi!",
+    "voce": "carlotta"
+  },
+  "allenatrice:2": {
+    "testo": "Bene! Ora tocca a me, sono più forte!",
+    "voce": "carlotta"
+  },
+  "allenatrice:3": {
+    "testo": "Sono una campionessa del torneo! Vediamo quanto sei in gamba!",
+    "voce": "carlotta"
+  },
+  "humor:0": {
+    "testo": "Wooosh! È scappato! Riprova!",
+    "voce": "pepole"
+  },
+  "humor:1": {
+    "testo": "Quasi quasi! Quel furbetto è veloce!",
+    "voce": "pepole"
+  },
+  "humor:2": {
+    "testo": "Uffa, è sgusciato via! Dai, ancora!",
+    "voce": "pepole"
+  },
+  "humor:3": {
+    "testo": "Pfff, troppo arzillo! Indeboliscilo un altro po'!",
+    "voce": "pepole"
+  },
+  "humor:4": {
+    "testo": "È schizzato fuori! Ci riproviamo?",
+    "voce": "pepole"
+  },
+  "pietropoli:scrigno-apre": {
+    "testo": "Nonna Tella apre uno scrigno antico. Dentro brillano tre Lumiballe colorate!",
+    "voce": "narratore"
+  },
+  "pietropoli:scelta-starter": {
+    "testo": "Quale Lumino vuoi come tuo primo amico?",
+    "voce": "narratore"
+  },
+  "pietropoli:starter-fiammino": {
+    "testo": "Fiammino esce dalla Lumiball in un lampo di luce e ti saluta felice!",
+    "voce": "narratore"
+  },
+  "pietropoli:starter-guscetto": {
+    "testo": "Guscetto esce dalla Lumiball in un lampo di luce e ti saluta felice!",
+    "voce": "narratore"
+  },
+  "pietropoli:starter-foglino": {
+    "testo": "Bulbino esce dalla Lumiball in un lampo di luce e ti saluta felice!",
+    "voce": "narratore"
+  },
+  "acquaverde:arrivo": {
+    "testo": "Pietro arriva ad Acquaverde, la città sul lago. L'aria sa di acqua fresca.",
+    "voce": "narratore"
+  },
+  "acquaverde:splash": {
+    "testo": "Splash! Qualcosa è caduto nel lago...",
+    "voce": "narratore"
+  },
+  "minigioco:conta-lumini": {
+    "testo": "Conta i Lumini!",
+    "voce": "narratore"
+  },
+  "minigioco:conta-bracciate": {
+    "testo": "Conta le bracciate!",
+    "voce": "narratore"
+  },
+  "minigioco:riprova": {
+    "testo": "Quasi! Conta di nuovo toccandoli uno a uno.",
+    "voce": "narratore"
+  },
+  "minigioco:bravo": {
+    "testo": "Bravissimo! Hai contato giusto!",
+    "voce": "narratore"
+  },
+  "cattura:successo": {
+    "testo": "Evviva! Adesso siete amici!",
+    "voce": "narratore"
+  },
+  "cattura:istruzioni": {
+    "testo": "Tocca la Lumiball per fare amicizia!",
+    "voce": "narratore"
+  },
+  "mappa:citta-bloccata": {
+    "testo": "Questa città è ancora chiusa! Continua il viaggio.",
+    "voce": "narratore"
+  },
+  "scappa_allenatore": {
+    "testo": "Le sfide con gli allenatori si finiscono!",
+    "voce": "narratore"
+  },
+  "onboarding:movimento": {
+    "testo": "Trascina il dito sullo schermo per camminare!",
+    "voce": "narratore"
+  },
+  "mossa:ricarica": {
+    "testo": "Questa mossa si sta ricaricando!",
+    "voce": "narratore"
+  },
+  "mossa:gia-usata": {
+    "testo": "Questa mossa l'hai già usata!",
+    "voce": "narratore"
+  },
+  "mossa:basta-cure": {
+    "testo": "Ha già recuperato abbastanza!",
+    "voce": "narratore"
+  },
+  "pepole:guida": {
+    "testo": "Andiamo da questa parte!",
+    "voce": "pepole"
+  },
+  "pepole:bravissimo": {
+    "testo": "Bravissimo!",
+    "voce": "pepole"
+  },
+  "pepole:scappa": {
+    "testo": "Gambe in spalla! Scappiamo!",
+    "voce": "pepole"
+  },
+  "allenatore:3": {
+    "testo": "Sono un campione del torneo! Vediamo di che pasta sei fatto!",
+    "voce": "bambino"
+  },
+  "terraverde:arrivo": {
+    "testo": "Pietro arriva a Terraverde, la città del giardino. L'aria profuma di foglie e di terra buona.",
+    "voce": "narratore"
+  },
+  "doda:cura": {
+    "testo": "Guarda quanti Lumini! Qui imparano a prendersi cura l'uno dell'altro. Anche tra noi: volersi bene rende tutti più forti.",
+    "voce": "carlotta"
+  },
+  "silvio:intro": {
+    "testo": "Sono Silvio, il custode del giardino. Qui conta il legame con i tuoi Lumini, non solo la forza. Vediamo cosa sapete fare insieme!",
+    "voce": "bambino"
+  },
+  "silvio:medaglia": {
+    "testo": "Che squadra affiatata! Ti consegno la Medaglia Radice: che le tue amicizie mettano radici profonde.",
+    "voce": "bambino"
+  },
+  "voltopoli:arrivo": {
+    "testo": "Pietro arriva a Voltopoli, tutta lucine e mulini a vento. Nell'aria crepita una bella energia!",
+    "voce": "narratore"
+  },
+  "rik:intro": {
+    "testo": "Sono Rik! Qui si ragiona veloci come un fulmine. Mostrami se trovi la mossa giusta al momento giusto!",
+    "voce": "bambino"
+  },
+  "rik:medaglia": {
+    "testo": "Scintillante! Ti sei guadagnato la Medaglia Scintilla. Continua a usare la testa!",
+    "voce": "bambino"
+  },
+  "pietrasanta:arrivo": {
+    "testo": "Pietro arriva a Pietrasanta, tra rocce e montagne. Qui tutto è solido e paziente.",
+    "voce": "narratore"
+  },
+  "rocco:intro": {
+    "testo": "Sono Rocco. La forza vera è calma e paziente, come la roccia. Vediamo se reggi il confronto!",
+    "voce": "bambino"
+  },
+  "rocco:medaglia": {
+    "testo": "Solido! Ti consegno la Medaglia Granito. Hai imparato la pazienza dei forti.",
+    "voce": "bambino"
+  },
+  "luminia:arrivo": {
+    "testo": "Pietro arriva a Luminia, la grande città di luce. È qui che si sfidano i Maestri più bravi!",
+    "voce": "narratore"
+  },
+  "maestro:intro": {
+    "testo": "Benvenuto al torneo, Pietro. Sono il Maestro. Mostrami tutto quello che hai imparato nel tuo viaggio!",
+    "voce": "bambino"
+  },
+  "maestro:medaglia": {
+    "testo": "Straordinario. Oggi è nato un nuovo grande Maestro Allenatore: sei tu, Pietro! Bravissimo.",
+    "voce": "bambino"
+  },
+  "nonnatella:scrigno#gen": {
+    "testo": "Ah, allora parti davvero! Ho qualcosa per te... uno scrigno che aspettava proprio te.",
+    "voce": "nonna"
+  },
+  "lauri:incontro#gen": {
+    "testo": "Ciao! Sono Doda. Che bello averti qui nel mio giardino di Terraverde!",
+    "voce": "carlotta"
+  },
+  "nico:salvataggio#gen": {
+    "testo": "Eccomi! Grazie, mi hai dato una mano. Mi ero sporto troppo per osservare i Lumini d'acqua.",
+    "voce": "bambino"
+  },
+  "nico:scusa#gen": {
+    "testo": "Avevi ragione. La prossima volta guardo prima di muovermi. Grazie del consiglio.",
+    "voce": "bambino"
+  },
+  "bimbo:sfida#gen": {
+    "testo": "Ehi, ciao! Sfidiamoci! Il mio Lumino è fortissimo!",
+    "voce": "bambino"
+  },
+  "acquaverde:arrivo#gen": {
+    "testo": "Ecco Acquaverde, la città sul lago. L'aria sa di acqua fresca.",
+    "voce": "narratore"
+  },
+  "terraverde:arrivo#gen": {
+    "testo": "Ecco Terraverde, la città del giardino. L'aria profuma di foglie e di terra buona.",
+    "voce": "narratore"
+  },
+  "voltopoli:arrivo#gen": {
+    "testo": "Ecco Voltopoli, tutta lucine e mulini a vento. Nell'aria crepita una bella energia!",
+    "voce": "narratore"
+  },
+  "pietrasanta:arrivo#gen": {
+    "testo": "Ecco Pietrasanta, tra rocce e montagne. Qui tutto è solido e paziente.",
+    "voce": "narratore"
+  },
+  "luminia:arrivo#gen": {
+    "testo": "Ecco Luminia, la grande città di luce. È qui che si sfidano i Maestri più bravi!",
+    "voce": "narratore"
+  },
+  "maestro:intro#gen": {
+    "testo": "Ti do il benvenuto al torneo! Sono il Maestro. Mostrami tutto quello che hai imparato nel tuo viaggio!",
+    "voce": "bambino"
+  },
+  "maestro:medaglia#gen": {
+    "testo": "Straordinario. Oggi è nato un nuovo grande Maestro Allenatore: sei proprio tu! Che impresa!",
+    "voce": "bambino"
+  },
+  "pietro:presentazione#f": {
+    "testo": "Ciao a tutti! Sto per cominciare la mia grande avventura nel Lumimondo!",
+    "voce": "carlotta"
+  },
+  "pietro:sogno#f": {
+    "testo": "Un giorno diventerò la più grande Maestra Allenatrice di tutto il Lumimondo!",
+    "voce": "carlotta"
+  },
+  "pietro:partenza#f": {
+    "testo": "Sei pronta, Pepole? La nostra avventura comincia adesso!",
+    "voce": "carlotta"
+  },
+  "pietro:vittoria#f": {
+    "testo": "Ce l'abbiamo fatta! Bravissimi tutti!",
+    "voce": "carlotta"
+  },
+  "pietro:medaglia#f": {
+    "testo": "La mia prima medaglia! Grazie Marina!",
+    "voce": "carlotta"
+  },
+  "rifugio:benvenuto": {
+    "testo": "Benvenuto alle Coccole! Qui i Lumini si riposano e ricevono le tue attenzioni.",
+    "voce": "pepole"
+  },
+  "rifugio:carezza": {
+    "testo": "Che coccole! Gli piace un sacco.",
+    "voce": "pepole"
+  },
+  "rifugio:nutri": {
+    "testo": "Gnam gnam! Buonissimo, grazie!",
+    "voce": "pepole"
+  },
+  "rifugio:gioca": {
+    "testo": "Evviva, che ridere! Ancora, ancora!",
+    "voce": "pepole"
+  },
+  "rifugio:legame-su": {
+    "testo": "Il vostro legame è cresciuto! Che bello!",
+    "voce": "pepole"
+  },
+  "rifugio:legame-max": {
+    "testo": "Siete inseparabili! Il cuore più grande del Lumimondo!",
+    "voce": "pepole"
+  },
+  "pepole:vicino": {
+    "testo": "Avviciniamoci un pochino!",
+    "voce": "pepole"
+  },
+  "coccole:benvenuto": {
+    "testo": "Guarda bene il tuo Lumino e prova a capire come si sente. Poi dagli quello di cui ha bisogno!",
+    "voce": "narratore"
+  },
+  "coccole:giusto": {
+    "testo": "Bravo! Hai capito come si sente. Il vostro legame è cresciuto!",
+    "voce": "narratore"
+  },
+  "coccole:sbaglia": {
+    "testo": "Uhm, non era proprio quello. Guarda meglio la sua faccia e prova ancora!",
+    "voce": "narratore"
+  },
+  "coccole:legame-su": {
+    "testo": "Che bel legame! Il tuo Lumino ti vuole sempre più bene.",
+    "voce": "narratore"
+  },
+  "coccole:legame-max": {
+    "testo": "Siete inseparabili! Un cuore grande così.",
+    "voce": "narratore"
+  },
+  "coccole:sazio": {
+    "testo": "È felice e appagato. Torna a trovarlo più tardi!",
+    "voce": "narratore"
+  },
+  "gara:via": {
+    "testo": "Che cominci la gara di stile! Esibisciti a tempo di musica.",
+    "voce": "narratore"
+  },
+  "gara:bravo": {
+    "testo": "Che bella esibizione! Tutti applaudono.",
+    "voce": "narratore"
+  },
+  "gara:coccarda": {
+    "testo": "Fantastico! Hai vinto la coccarda! Sei una vera stella.",
+    "voce": "narratore"
+  },
+  "torneo:morale": {
+    "testo": "Diventare Maestro non voleva dire vincere più di tutti. Voleva dire prendersi cura dei propri amici, capirli, e non lasciare mai indietro nessuno. E questo, Pietro, tu lo sai fare benissimo.",
+    "voce": "narratore"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "_schema": "citta/v1 — contenuto editabile di una città (F0.3, base del CMS Fase S).",
+  "id": "terraverde",
+  "nome": "Terraverde",
+  "ordine": 2,
+  "elemento": "natura",
+  "palette": {
+    "primario": "#4caf50",
+    "scuro": "#2c7a33"
+  },
+  "descrizione": "Città del giardino botanico. Leader: Silvio.",
+  "medaglia": "radice",
+  "luminiSelvatici": [
+    "foglino",
+    "buzzino",
+    "roccolo"
+  ],
+  "pos": {
+    "x": 540,
+    "y": 520
+  },
+  "regia": {
+    "_nota": "F4/S5.4 — intro data-driven (era bespoke in _direttore). Arrivo + Doda si unisce (morale 'prendersi cura') + conta dei fiori. Il ramo bespoke resta come fallback se /api/contenuti non risponde.",
+    "gate": "terraverde:intro",
+    "beats": [
+      {
+        "tipo": "dialogo",
+        "battute": [
+          { "id": "terraverde:arrivo", "speaker": "narratore" },
+          { "id": "lauri:incontro", "speaker": "lauri" },
+          { "id": "doda:cura", "speaker": "lauri" }
+        ]
+      },
+      { "tipo": "unisci", "amico": "lauri" },
+      { "tipo": "conta", "n": 5, "tema": "fiori", "segna": "terraverde:intro" }
+    ]
+  },
+  "npc": [
+    {
+      "id": "doda",
+      "tipo": "amico",
+      "x": 400,
+      "y": 600,
+      "speaker": "lauri",
+      "emoji": "🧒",
+      "colore": "#8bc34a",
+      "nome": "Doda",
+      "battute": [
+        {
+          "id": "doda:cura",
+          "speaker": "lauri"
+        }
+      ]
+    },
+    {
+      "id": "t-all1",
+      "tipo": "allenatore",
+      "x": 860,
+      "y": 700,
+      "nome": "Gio",
+      "tex": "bimbo2",
+      "voce": "allenatore:1",
+      "emoji": "🧒",
+      "colore": "#6a8f3a",
+      "colori": {
+        "pelle": "#e0ac69",
+        "capelli": "#16110c",
+        "maglia": "#20b6b6",
+        "pantaloni": "#2c7a55",
+        "femmina": false
+      },
+      "battaglia": {
+        "avversario": "foglino",
+        "idSfida": "terraverde-all1"
+      }
+    },
+    {
+      "id": "t-all2",
+      "tipo": "allenatore",
+      "x": 620,
+      "y": 700,
+      "nome": "Nina",
+      "tex": "bimba2",
+      "voce": "allenatrice:2",
+      "emoji": "🧒",
+      "colore": "#3a7a4a",
+      "colori": {
+        "pelle": "#e0ac69",
+        "capelli": "#5a4631",
+        "maglia": "#49b265",
+        "pantaloni": "#8a4b1e",
+        "femmina": true
+      },
+      "battaglia": {
+        "avversario": "floranyx",
+        "idSfida": "terraverde-all2"
+      }
+    },
+    {
+      "id": "silvio",
+      "tipo": "leader",
+      "x": 600,
+      "y": 330,
+      "speaker": "silvio",
+      "emoji": "🧑‍🌾",
+      "colore": "#4caf50",
+      "gateFiori": 2,
+      "medaglia": "radice",
+      "festaTesto": "🏅 Medaglia Radice!",
+      "festaColore": "#2c7a33",
+      "cittaFatta": "terraverde:fatta",
+      "evolviFlag": "terraverde:evoluto",
+      "battaglia": {
+        "avversario": "foglino",
+        "squadra": [
+          "foglino",
+          "floranyx",
+          "selvarex"
+        ],
+        "idSfida": "terraverde-silvio"
+      },
+      "battuteIntro": [
+        {
+          "id": "silvio:intro",
+          "speaker": "silvio"
+        }
+      ],
+      "battuteMedaglia": [
+        {
+          "id": "silvio:medaglia",
+          "speaker": "silvio"
+        }
+      ],
+      "gateRivale": "rivale-terraverde"
+    }
+  ],
+  "ostacoli": [
+    {
+      "id": "rovi",
+      "tipo": "natura",
+      "x": 180,
+      "y": 1180,
+      "premio": {
+        "tipo": "stelline",
+        "n": 5
+      }
+    },
+    {
+      "id": "masso",
+      "tipo": "roccia",
+      "x": 1040,
+      "y": 1180,
+      "premio": {
+        "tipo": "oggetto",
+        "id": "trifoglio",
+        "n": 1
+      }
+    }
+  ],
+  "gara": {
+    "id": "gara-bosco",
+    "x": 600,
+    "y": 1100
+  }
+}

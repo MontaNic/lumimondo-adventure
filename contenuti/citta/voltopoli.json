@@ -1,0 +1,168 @@
+{
+  "_schema": "citta/v1 — contenuto editabile di una città (F0.3, base del CMS Fase S).",
+  "id": "voltopoli",
+  "nome": "Voltopoli",
+  "ordine": 3,
+  "elemento": "elettricita",
+  "palette": {
+    "primario": "#ffd23f",
+    "scuro": "#b8860b"
+  },
+  "descrizione": "Città delle invenzioni. Leader: Rik.",
+  "medaglia": "scintilla",
+  "luminiSelvatici": [
+    "zappix",
+    "brizzo",
+    "foglino"
+  ],
+  "pos": {
+    "x": 720,
+    "y": 360
+  },
+  "regia": {
+    "_nota": "F4/S5.4 — intro data-driven (era bespoke). Arrivo + Rik accende le luci con una SEQUENZA (quiz). Fallback: ramo bespoke se /api/contenuti non risponde.",
+    "gate": "voltopoli:intro",
+    "beats": [
+      {
+        "tipo": "dialogo",
+        "battute": [
+          { "id": "voltopoli:arrivo", "speaker": "narratore" }
+        ]
+      },
+      { "tipo": "quiz", "forza": { "tipo": "sequenza" }, "segna": "voltopoli:intro" }
+    ]
+  },
+  "npc": [
+    {
+      "id": "v-all1",
+      "tipo": "allenatore",
+      "x": 860,
+      "y": 700,
+      "nome": "Bruno",
+      "tex": "bimbo3",
+      "voce": "allenatore:1",
+      "emoji": "🧒",
+      "colore": "#d4a017",
+      "colori": {
+        "pelle": "#e0ac69",
+        "capelli": "#5a4631",
+        "maglia": "#f0a830",
+        "pantaloni": "#444b54",
+        "femmina": false
+      },
+      "battaglia": {
+        "avversario": "zappix",
+        "idSfida": "voltopoli-all1"
+      }
+    },
+    {
+      "id": "v-all2",
+      "tipo": "allenatore",
+      "x": 620,
+      "y": 700,
+      "nome": "Cleo",
+      "tex": "bimba3",
+      "voce": "allenatrice:2",
+      "emoji": "🧒",
+      "colore": "#c06030",
+      "colori": {
+        "pelle": "#ffd9b3",
+        "capelli": "#16110c",
+        "maglia": "#f0a830",
+        "pantaloni": "#5a4631",
+        "femmina": true
+      },
+      "battaglia": {
+        "avversario": "voltrik",
+        "idSfida": "voltopoli-all2"
+      }
+    },
+    {
+      "id": "v-all3",
+      "tipo": "allenatore",
+      "x": 980,
+      "y": 520,
+      "nome": "Sara",
+      "tex": "bimbo4",
+      "voce": "allenatrice:3",
+      "emoji": "🧒",
+      "colore": "#6a4cc4",
+      "colori": {
+        "pelle": "#c68642",
+        "capelli": "#5a4631",
+        "maglia": "#9b59b6",
+        "pantaloni": "#8a4b1e",
+        "femmina": true
+      },
+      "battaglia": {
+        "avversario": "brizzo",
+        "idSfida": "voltopoli-all3"
+      }
+    },
+    {
+      "id": "rik",
+      "tipo": "leader",
+      "x": 600,
+      "y": 330,
+      "speaker": "rik",
+      "emoji": "⚡",
+      "colore": "#ffd23f",
+      "gateFiori": 3,
+      "medaglia": "scintilla",
+      "festaTesto": "🏅 Medaglia Scintilla!",
+      "festaColore": "#b8860b",
+      "cittaFatta": "voltopoli:fatta",
+      "evolviFlag": "voltopoli:evoluto",
+      "battaglia": {
+        "avversario": "zappix",
+        "squadra": [
+          "zappix",
+          "voltrik",
+          "fulminex"
+        ],
+        "idSfida": "voltopoli-rik"
+      },
+      "battuteIntro": [
+        {
+          "id": "rik:intro",
+          "speaker": "rik"
+        }
+      ],
+      "battuteMedaglia": [
+        {
+          "id": "rik:medaglia",
+          "speaker": "rik"
+        }
+      ],
+      "gateRivale": "rivale-voltopoli"
+    }
+  ],
+  "ostacoli": [
+    {
+      "id": "meccanismo",
+      "tipo": "elettricita",
+      "x": 180,
+      "y": 1150,
+      "premio": {
+        "tipo": "stelline",
+        "n": 6
+      }
+    },
+    {
+      "id": "soffio",
+      "tipo": "aria",
+      "x": 1050,
+      "y": 1150,
+      "premio": {
+        "tipo": "oggetto",
+        "id": "lumiball",
+        "n": 2
+      }
+    }
+  ],
+  "gara": {
+    "id": "gara-luci",
+    "x": 600,
+    "y": 1100
+  }
+}

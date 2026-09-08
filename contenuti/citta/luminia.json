@@ -1,0 +1,169 @@
+{
+  "_schema": "citta/v1 — contenuto editabile di una città (F0.3, base del CMS Fase S).",
+  "id": "luminia",
+  "nome": "Luminia",
+  "ordine": 5,
+  "elemento": null,
+  "palette": {
+    "primario": "#ffd23f",
+    "scuro": "#c79a1e"
+  },
+  "descrizione": "La città del Grande Torneo.",
+  "medaglia": null,
+  "luminiSelvatici": [
+    "fiammino",
+    "foglino",
+    "brizzo"
+  ],
+  "pos": {
+    "x": 850,
+    "y": 120
+  },
+  "npc": [
+    {
+      "id": "l-all1",
+      "tipo": "allenatore",
+      "x": 860,
+      "y": 700,
+      "nome": "Remo",
+      "tex": "bimbo7",
+      "voce": "allenatore:3",
+      "emoji": "🧒",
+      "colore": "#b58cff",
+      "colori": {
+        "pelle": "#e0ac69",
+        "capelli": "#16110c",
+        "maglia": "#2f8fd8",
+        "pantaloni": "#6a4cc4",
+        "femmina": false
+      },
+      "battaglia": {
+        "avversario": "fulminex",
+        "idSfida": "luminia-all1"
+      }
+    },
+    {
+      "id": "l-all2",
+      "tipo": "allenatore",
+      "x": 620,
+      "y": 700,
+      "nome": "Lia",
+      "tex": "bimbo8",
+      "voce": "allenatrice:3",
+      "emoji": "🧒",
+      "colore": "#6f5a4a",
+      "colori": {
+        "pelle": "#8d5524",
+        "capelli": "#5a4631",
+        "maglia": "#20b6b6",
+        "pantaloni": "#8a4b1e",
+        "femmina": true
+      },
+      "battaglia": {
+        "avversario": "titanrock",
+        "idSfida": "luminia-all2"
+      }
+    },
+    {
+      "id": "l-all3",
+      "tipo": "allenatore",
+      "x": 980,
+      "y": 520,
+      "nome": "Bea",
+      "tex": "bimba2",
+      "voce": "allenatrice:3",
+      "emoji": "🧒",
+      "colore": "#34a0d8",
+      "colori": {
+        "pelle": "#e0ac69",
+        "capelli": "#16110c",
+        "maglia": "#e23b2e",
+        "pantaloni": "#5a4631",
+        "femmina": true
+      },
+      "battaglia": {
+        "avversario": "aquarex",
+        "idSfida": "luminia-all3"
+      }
+    },
+    {
+      "id": "maestro",
+      "tipo": "leader",
+      "x": 600,
+      "y": 510,
+      "speaker": "maestro",
+      "emoji": "👑",
+      "colore": "#ffd23f",
+      "gateFiori": 4,
+      "gateRivale": "rivale-luminia",
+      "medaglia": "maestro",
+      "festaTesto": "🏆 Sei un Maestro!",
+      "festaColore": "#c79a1e",
+      "cittaFatta": "luminia:fatta",
+      "battaglia": {
+        "avversario": "pyronex",
+        "squadra": [
+          "aquarex",
+          "selvarex",
+          "pyronex"
+        ],
+        "idSfida": "luminia-maestro"
+      },
+      "battuteIntro": [
+        {
+          "id": "maestro:intro",
+          "speaker": "maestro"
+        }
+      ],
+      "battuteMedaglia": [
+        {
+          "id": "maestro:medaglia",
+          "speaker": "maestro"
+        }
+      ],
+      "battuteCerimonia": [
+        {
+          "id": "nonnatella:finale",
+          "speaker": "nonnatella"
+        },
+        {
+          "id": "torneo:morale",
+          "speaker": "narratore"
+        }
+      ]
+    }
+  ],
+  "ostacoli": [
+    {
+      "id": "grotta",
+      "tipo": "fuoco",
+      "x": 180,
+      "y": 1180,
+      "premio": {
+        "tipo": "stelline",
+        "n": 8
+      }
+    },
+    {
+      "id": "rovi",
+      "tipo": "natura",
+      "x": 1040,
+      "y": 1180,
+      "premio": {
+        "tipo": "oggetto",
+        "id": "lumiball",
+        "n": 3
+      }
+    }
+  ],
+  "gara": {
+    "id": "gara-arte",
+    "x": 600,
+    "y": 1100
+  },
+  "torneo": {
+    "_nota": "Il Grande Torneo (F4): i 3 sfidanti (in qualsiasi ordine) sbloccano la finale col Maestro.",
+    "sfide": ["luminia-all1", "luminia-all2", "luminia-all3"],
+    "finale": "luminia-maestro"
+  }
+}

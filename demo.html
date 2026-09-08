@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lumimondo Adventure — Demo / Checkpoint</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { margin: 0; min-height: 100vh; background: #1a1226; color: #fff;
+      font-family: system-ui, sans-serif; padding: 24px; box-sizing: border-box; }
+    h1 { color: #ffd23f; margin: 0 0 4px; }
+    p.note { color: #cdb8e0; margin: 0 0 20px; font-size: 14px; max-width: 640px; }
+    .griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px; max-width: 760px; }
+    a.card { display: block; text-decoration: none; color: #fff; background: #2c2140;
+      border: 2px solid #ffd23f55; border-radius: 14px; padding: 18px; min-height: 60px; }
+    a.card:active { transform: scale(0.98); }
+    a.card.pronto { border-color: #ffd23f; }
+    a.card.wip { opacity: 0.5; border-color: #66557a; }
+    .titolo { font-size: 19px; font-weight: bold; color: #ffd23f; }
+    .desc { font-size: 13px; color: #d8c8ec; margin-top: 6px; }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 8px; background: #2c7a33; }
+    .badge.wip { background: #66557a; }
+    footer { margin-top: 24px; font-size: 12px; color: #9a87b5; }
+  </style>
+</head>
+<body>
+  <h1>Lumimondo — Demo & Checkpoint</h1>
+  <p class="note">Scorciatoie per verificare i checkpoint senza giocare dall'inizio.
+    Stato rifacimento Phaser: <strong>P1-01 / P1-02 / P1-05</strong> pronti per la verifica dal vivo.</p>
+
+  <div class="griglia">
+    <a class="card pronto" href="index.html?demo=apertura">
+      <span class="badge">intro</span>
+      <div class="titolo">🎬 Apertura (retrò)</div>
+      <div class="desc">Cinematica d'avvio: logo animato + face-off giocoso Pietro &amp; Pepole vs un Lumino (entrano dai lati, balzo amichevole + scintille) + "TOCCA PER INIZIARE". Tap = salta → profilo.</div>
+    </a>
+
+    <a class="card pronto" href="index.html?demo=playground">
+      <span class="badge">P1-02</span>
+      <div class="titolo">🚶 Movimento</div>
+      <div class="desc">Pietro cammina: tap-to-move, joystick (tieni premuto), WASD su PC, ostacoli e camera. <em>Checkpoint movimento.</em></div>
+    </a>
+
+    <a class="card pronto" href="index.html?demo=dialogo">
+      <span class="badge">P1-05</span>
+      <div class="titolo">💬 Dialogo (sync audio)</div>
+      <div class="desc">Typewriter + voce. Avanza veloce 4-5 battute: l'audio segue sempre la battuta visualizzata. Primo tap completa il testo, secondo avanza.</div>
+    </a>
+
+    <a class="card pronto" href="index.html?demo=mappa">
+      <span class="badge">P1-03</span>
+      <div class="titolo">🗺️ Mappa Mondo</div>
+      <div class="desc">Sentiero, 6 città (2 attive), Pietro con Pepole sulla spalla, lucchetti, guida-bussola di Pepole. Cammina su una città aperta → entra.</div>
+    </a>
+
+    <a class="card pronto" href="index.html?demo=citta&sub=pietropoli">
+      <span class="badge">P1-04/09</span>
+      <div class="titolo">🏘️ Pietropoli</div>
+      <div class="desc">Regia: sogno → scrigno/starter → conta-Lumini → Lauri. NPC, erba alta, mini-sfida bimbo. (Reset con localStorage.clear() per rivedere l'intro.)</div>
+    </a>
+
+    <a class="card pronto" href="index.html?demo=citta&sub=acquaverde">
+      <span class="badge">P1-10/11</span>
+      <div class="titolo">🌊 Acquaverde</div>
+      <div class="desc">Arrivo → Nico si unisce → bracciate → morale. Allenatori, Marina → Medaglia Onda. Arena acquatica.</div>
+    </a>
+
+    <a class="card pronto" href="index.html?demo=battaglia">
+      <span class="badge">P1-07</span>
+      <div class="titolo">⚔️ Battaglia + effetti</div>
+      <div class="desc">Fiammino vs Foglino (fuoco &gt; erba). Turni che funzionano (input torna ogni giro), arena con cielo sfumato/nuvole/pedane, idle permanente, box HUD con livello. Ogni mossa: proiettile + reazione + numeri.<br>
+        Arene: <a style="color:#ffd23f" href="index.html?demo=battaglia&sub=acqua">acquatica</a> ·
+        <a style="color:#ffd23f" href="index.html?demo=battaglia&sub=roccia">rocciosa</a></div>
+    </a>
+
+    <a class="card pronto" href="index.html?demo=battaglia">
+      <span class="badge">P1-08</span>
+      <div class="titolo">🎯 Cattura Lumiball</div>
+      <div class="desc">Dentro la battaglia selvatica: pulsante ⚪ Lumiball → trascina la sfera verso il Lumino. Più è stanco, più è facile. Bicolore + stella, 3 rimbalzi, successo/fuga con humor di Pepole.</div>
+    </a>
+
+    <a class="card pronto" href="index.html?demo=album">
+      <span class="badge">P1-12</span>
+      <div class="titolo">📖 Album Lumini</div>
+      <div class="desc">Libro sfogliabile: catturato = a colori, visto = silhouette, ignoto = ?. Pepole "Per sempre cucciola!". Frecce per le pagine.</div>
+    </a>
+
+    <a class="card pronto" href="index.html?demo=evoluzione">
+      <span class="badge">P1-14</span>
+      <div class="titolo">✨ Evoluzione</div>
+      <div class="desc">Cinematica: flash → silhouette che cresce + raggi → nuovo sprite → Pietro e Pepole esultano → "Fiammino si è evoluto in Fiammantor!". (In gioco: ricompensa dopo la Medaglia Onda.)</div>
+    </a>
+  </div>
+
+  <footer>
+    Gioco completo: <a href="index.html" style="color:#ffd23f">index.html</a> &nbsp;·&nbsp;
+    Reset salvataggio: apri la console e <code>localStorage.clear()</code>
+  </footer>
+</body>
+</html>

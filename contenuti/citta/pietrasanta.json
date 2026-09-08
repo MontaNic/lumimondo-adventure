@@ -1,0 +1,168 @@
+{
+  "_schema": "citta/v1 — contenuto editabile di una città (F0.3, base del CMS Fase S).",
+  "id": "pietrasanta",
+  "nome": "Pietrasanta",
+  "ordine": 4,
+  "elemento": "roccia",
+  "palette": {
+    "primario": "#9b8579",
+    "scuro": "#5f5046"
+  },
+  "descrizione": "Città di pietra. Leader: Rocco.",
+  "medaglia": "granito",
+  "luminiSelvatici": [
+    "roccolo",
+    "zappix",
+    "guscetto"
+  ],
+  "pos": {
+    "x": 540,
+    "y": 210
+  },
+  "regia": {
+    "_nota": "F4/S5.4 — intro data-driven (era la mappa 'arrivi' bespoke). Solo la voce d'arrivo del narratore. Fallback: ramo bespoke se /api/contenuti non risponde.",
+    "gate": "pietrasanta:intro",
+    "beats": [
+      {
+        "tipo": "dialogo",
+        "battute": [
+          { "id": "pietrasanta:arrivo", "speaker": "narratore" }
+        ],
+        "segna": "pietrasanta:intro"
+      }
+    ]
+  },
+  "npc": [
+    {
+      "id": "p-all1",
+      "tipo": "allenatore",
+      "x": 860,
+      "y": 700,
+      "nome": "Vito",
+      "tex": "bimbo5",
+      "voce": "allenatore:1",
+      "emoji": "🧒",
+      "colore": "#8a7560",
+      "colori": {
+        "pelle": "#e0ac69",
+        "capelli": "#16110c",
+        "maglia": "#e23b2e",
+        "pantaloni": "#5a4631",
+        "femmina": false
+      },
+      "battaglia": {
+        "avversario": "roccolo",
+        "idSfida": "pietrasanta-all1"
+      }
+    },
+    {
+      "id": "p-all2",
+      "tipo": "allenatore",
+      "x": 620,
+      "y": 700,
+      "nome": "Enea",
+      "tex": "bimbo6",
+      "voce": "allenatore:2",
+      "emoji": "🧒",
+      "colore": "#6f5a4a",
+      "colori": {
+        "pelle": "#e0ac69",
+        "capelli": "#5a4631",
+        "maglia": "#9b59b6",
+        "pantaloni": "#3a5a8a",
+        "femmina": false
+      },
+      "battaglia": {
+        "avversario": "granitor",
+        "idSfida": "pietrasanta-all2"
+      }
+    },
+    {
+      "id": "p-all3",
+      "tipo": "allenatore",
+      "x": 980,
+      "y": 520,
+      "nome": "Ada",
+      "tex": "bimba1",
+      "voce": "allenatrice:3",
+      "emoji": "🧒",
+      "colore": "#4a6f8a",
+      "colori": {
+        "pelle": "#f1c27d",
+        "capelli": "#16110c",
+        "maglia": "#ff7aa2",
+        "pantaloni": "#5a4631",
+        "femmina": true
+      },
+      "battaglia": {
+        "avversario": "ventrix",
+        "idSfida": "pietrasanta-all3"
+      }
+    },
+    {
+      "id": "rocco",
+      "tipo": "leader",
+      "x": 600,
+      "y": 330,
+      "speaker": "rocco",
+      "emoji": "🧗",
+      "colore": "#9b8579",
+      "gateFiori": 3,
+      "medaglia": "granito",
+      "festaTesto": "🏅 Medaglia Granito!",
+      "festaColore": "#5f5046",
+      "cittaFatta": "pietrasanta:fatta",
+      "evolviFlag": "pietrasanta:evoluto",
+      "battaglia": {
+        "avversario": "roccolo",
+        "squadra": [
+          "roccolo",
+          "granitor",
+          "titanrock"
+        ],
+        "idSfida": "pietrasanta-rocco"
+      },
+      "battuteIntro": [
+        {
+          "id": "rocco:intro",
+          "speaker": "rocco"
+        }
+      ],
+      "battuteMedaglia": [
+        {
+          "id": "rocco:medaglia",
+          "speaker": "rocco"
+        }
+      ],
+      "gateRivale": "rivale-pietrasanta"
+    }
+  ],
+  "ostacoli": [
+    {
+      "id": "masso",
+      "tipo": "roccia",
+      "x": 180,
+      "y": 1180,
+      "premio": {
+        "tipo": "stelline",
+        "n": 6
+      }
+    },
+    {
+      "id": "guado",
+      "tipo": "acqua",
+      "x": 1040,
+      "y": 1180,
+      "premio": {
+        "tipo": "oggetto",
+        "id": "trifoglio",
+        "n": 1
+      }
+    }
+  ],
+  "gara": {
+    "id": "gara-roccia",
+    "x": 600,
+    "y": 1100
+  }
+}

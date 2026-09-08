@@ -1,0 +1,6 @@
+{
+  "//": "Scoping ESM per i moduli del gioco: fa sì che Node tratti i .js sotto public/js/ come ES module (per i test in test/ e i tool). Il browser lo ignora; il server (CJS, fuori da questa cartella) non è toccato.",
+  "name": "lumimondo-adventure-frontend",
+  "type": "module",
+  "private": true
+}

@@ -1,0 +1,235 @@
+{
+  "_schema": "citta/v1 — contenuto editabile di una città (F0.3, base del CMS Fase S). L'admin ne modifica una copia-override; il gioco carica merge(base, override).",
+  "id": "acquaverde",
+  "nome": "Acquaverde",
+  "ordine": 1,
+  "elemento": "acqua",
+  "palette": {
+    "primario": "#34a0d8",
+    "scuro": "#1f6f9c"
+  },
+  "descrizione": "Città sul lago. Leader: Marina.",
+  "medaglia": "onda",
+  "luminiSelvatici": [
+    "guscetto",
+    "brizzo",
+    "buzzino"
+  ],
+  "pos": {
+    "x": 340,
+    "y": 410
+  },
+  "regia": {
+    "_nota": "F0.4 — regia d'arrivo data-driven interpretata da motore/regia.js. Sostituisce il ramo bespoke di CittaScene._direttore per Acquaverde (fallback se assente). Beat: marcatore sul lago → voce d'arrivo (una volta) → alla prossimità del lago la scenetta di Nico che cade (dialoghi + Nico entra nel gruppo + conta delle bracciate) → flag acquaverde:intro.",
+    "gate": "acquaverde:intro",
+    "beats": [
+      {
+        "tipo": "alone",
+        "pos": {
+          "x": 300,
+          "y": 540
+        },
+        "colore": "#7ad0ff"
+      },
+      {
+        "tipo": "dialogoUnaVolta",
+        "once": "acquaverde:arrivo-detto",
+        "battute": [
+          {
+            "id": "acquaverde:arrivo",
+            "speaker": "narratore"
+          }
+        ]
+      },
+      {
+        "tipo": "prossimita",
+        "pos": {
+          "x": 300,
+          "y": 540
+        },
+        "r": 160,
+        "segna": "acquaverde:intro",
+        "poi": [
+          {
+            "tipo": "dialogo",
+            "battute": [
+              {
+                "id": "acquaverde:splash",
+                "speaker": "narratore"
+              },
+              {
+                "id": "nico:salvataggio",
+                "speaker": "nico"
+              }
+            ]
+          },
+          {
+            "tipo": "unisci",
+            "amico": "nico"
+          },
+          {
+            "tipo": "dialogo",
+            "battute": [
+              {
+                "id": "lauri:bracciate",
+                "speaker": "pepole"
+              }
+            ]
+          },
+          {
+            "tipo": "conta",
+            "n": 4,
+            "tema": "gocce"
+          },
+          {
+            "tipo": "dialogo",
+            "battute": [
+              {
+                "id": "lauri:morale-aiuto",
+                "speaker": "pepole"
+              },
+              {
+                "id": "nico:scusa",
+                "speaker": "nico"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "npc": [
+    {
+      "id": "nico",
+      "tipo": "amico",
+      "x": 300,
+      "y": 540,
+      "speaker": "nico",
+      "emoji": "🧒",
+      "colore": "#2f6fc4",
+      "battute": [
+        {
+          "id": "nico:battuta",
+          "speaker": "nico"
+        },
+        {
+          "id": "nico:entusiasmo",
+          "speaker": "nico"
+        }
+      ]
+    },
+    {
+      "id": "a-all1",
+      "tipo": "allenatore",
+      "x": 860,
+      "y": 700,
+      "nome": "Leo",
+      "tex": "bimbo1",
+      "voce": "allenatore:1",
+      "emoji": "🧒",
+      "colore": "#6a4cc4",
+      "colori": {
+        "pelle": "#e0ac69",
+        "capelli": "#8a3b1e",
+        "maglia": "#49b265",
+        "pantaloni": "#8a4b1e",
+        "femmina": false
+      },
+      "battaglia": {
+        "avversario": "brizzo",
+        "idSfida": "acquaverde-all1"
+      }
+    },
+    {
+      "id": "a-all2",
+      "tipo": "allenatore",
+      "x": 620,
+      "y": 700,
+      "nome": "Mia",
+      "tex": "bimba1",
+      "voce": "allenatrice:2",
+      "emoji": "🧒",
+      "colore": "#c06030",
+      "colori": {
+        "pelle": "#f1c27d",
+        "capelli": "#c99a3a",
+        "maglia": "#2f8fd8",
+        "pantaloni": "#5a4631",
+        "femmina": true
+      },
+      "battaglia": {
+        "avversario": "guscetto",
+        "idSfida": "acquaverde-all2"
+      }
+    },
+    {
+      "id": "marina",
+      "tipo": "leader",
+      "x": 600,
+      "y": 330,
+      "speaker": "marina",
+      "emoji": "🧜",
+      "colore": "#34a0d8",
+      "gateFiori": 1,
+      "medaglia": "onda",
+      "festaTesto": "🏅 Medaglia Onda!",
+      "festaColore": "#1f6f9c",
+      "cittaFatta": "acquaverde:fatta",
+      "evolviFlag": "starter:evoluto",
+      "battaglia": {
+        "avversario": "guscetto",
+        "squadra": [
+          "guscetto",
+          "idronix",
+          "aquarex"
+        ],
+        "idSfida": "acquaverde-marina"
+      },
+      "battuteIntro": [
+        {
+          "id": "marina:intro",
+          "speaker": "marina"
+        }
+      ],
+      "battuteMedaglia": [
+        {
+          "id": "marina:medaglia",
+          "speaker": "marina"
+        },
+        {
+          "id": "pietro:medaglia",
+          "speaker": "pietro"
+        }
+      ],
+      "gateRivale": "rivale-acquaverde"
+    }
+  ],
+  "ostacoli": [
+    {
+      "id": "guado",
+      "tipo": "acqua",
+      "x": 1050,
+      "y": 1150,
+      "premio": {
+        "tipo": "stelline",
+        "n": 5
+      }
+    },
+    {
+      "id": "soffio",
+      "tipo": "aria",
+      "x": 180,
+      "y": 1150,
+      "premio": {
+        "tipo": "oggetto",
+        "id": "lumiball",
+        "n": 2
+      }
+    }
+  ],
+  "gara": {
+    "id": "gara-prati",
+    "x": 600,
+    "y": 1100
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Lumimondo Adventure",
+  "short_name": "Lumimondo",
+  "id": "/lumimondo-adventure/",
+  "description": "Un'avventura per diventare Maestro Allenatore di Lumini!",
+  "lang": "it",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "categories": ["games", "education", "kids"],
+  "background_color": "#ffb347",
+  "theme_color": "#ff8c28",
+  "icons": [
+    { "src": "assets/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "assets/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

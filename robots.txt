@@ -1,0 +1,4 @@
+# Lumimondo Adventure — gioco privato per un bambino, non un sito da indicizzare.
+# L'indirizzo resta raggiungibile da chi ce l'ha, ma non finisce nei motori di ricerca.
+User-agent: *
+Disallow: /

@@ -1,0 +1,60 @@
+{
+  "_schema": "citta/v1 — METADATI + REGIA (F0.4). Pietropoli è il villaggio-tutorial: gli NPC (Nonnatella + il bimbo Giorgio) restano bespoke (nessun array `npc` → `_npcCitta` fa fallback a `NPC_CITTA['pietropoli']`), mentre l'INTRO GUIDATA è data-driven (`regia`): sequenza di tappe (gruppo con gate/segna = ripresa per tappa) interpretate da motore/regia.js. I momenti su misura sono hook nominati (presentazione/scrignoStarter/demoStelline/avviaBattaglia/fineLivello). Rispecchia esattamente il vecchio CittaScene._introStep.",
+  "id": "pietropoli",
+  "nome": "Pietropoli",
+  "ordine": 0,
+  "elemento": null,
+  "palette": { "primario": "#ff8c28", "scuro": "#a85614" },
+  "descrizione": "La città di Pietro. Qui comincia tutto.",
+  "medaglia": null,
+  "luminiSelvatici": ["foglino"],
+  "pos": { "x": 140, "y": 540 },
+  "regia": {
+    "intro": true,
+    "gate": "pietropoli:fatta",
+    "beats": [
+      { "tipo": "gruppo", "gate": "intro:gioco", "segna": "intro:gioco", "beats": [
+        { "tipo": "presentazione" },
+        { "tipo": "dialogo", "battute": [
+          { "id": "pietro:presentazione", "speaker": "pietro" },
+          { "id": "pietro:sogno", "speaker": "pietro" },
+          { "id": "narratore:benvenuto", "speaker": "narratore" }
+        ] }
+      ] },
+      { "tipo": "gruppo", "gate": "pietropoli:pepole", "segna": "pietropoli:pepole", "beats": [
+        { "tipo": "guida", "pos": { "x": 600, "y": 1040 }, "colore": "#ffe08a", "poi": [
+          { "tipo": "dialogo", "battute": [
+            { "id": "pepole:saluto1", "speaker": "pepole" },
+            { "id": "pietro:partenza", "speaker": "pietro" }
+          ] },
+          { "tipo": "pepoleSalta" }
+        ] }
+      ] },
+      { "tipo": "gruppo", "gate": "starter:scelto", "beats": [
+        { "tipo": "guida", "pos": { "x": 380, "y": 360 }, "colore": "#ffd23f", "poi": [
+          { "tipo": "dialogo", "battute": [{ "id": "nonnatella:scrigno", "speaker": "nonnatella" }] },
+          { "tipo": "scrignoStarter", "segna": "starter:scelto" },
+          { "tipo": "dialogoStarter" },
+          { "tipo": "conta", "n": 5, "tema": "lumini" },
+          { "tipo": "dialogo", "battute": [{ "id": "nonnatella:conta-ok", "speaker": "nonnatella" }] }
+        ] }
+      ] },
+      { "tipo": "gruppo", "gate": "sfida:pietropoli-bimbo:vinta", "beats": [
+        { "tipo": "guida", "pos": { "x": 820, "y": 720 }, "colore": "#9ecbff", "tex": "bimbo", "poi": [
+          { "tipo": "demoStelline" },
+          { "tipo": "dialogo", "battute": [
+            { "id": "bimbo:sfida", "speaker": "bambino", "nome": "Giorgio" },
+            { "id": "pepole:come-giocare", "speaker": "pepole" },
+            { "id": "lauri:tipi", "speaker": "pepole" },
+            { "id": "lauri:incoraggia", "speaker": "pepole" }
+          ] },
+          { "tipo": "avviaBattaglia", "cfg": { "avversario": "foglino", "selvatico": false, "idSfida": "pietropoli-bimbo" } }
+        ] }
+      ] },
+      { "tipo": "gruppo", "gate": "pietropoli:spiegafine", "segna": "pietropoli:spiegafine", "beats": [
+        { "tipo": "dialogo", "battute": [{ "id": "pepole:come-funziona", "speaker": "pepole" }] }
+      ] },
+      { "tipo": "fineLivello", "nome": "Pietropoli", "segnaFatta": "pietropoli:fatta" }
+    ]
+  }
+}
