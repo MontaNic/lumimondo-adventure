@@ -24,8 +24,10 @@ import { salvaGS, aggiungiXP, incrStat } from '../../gs.js';
 import { eseguiRegia } from '../../motore/regia.js';
 import { aiutantePerOstacolo, datiOstacolo, NOME_ELEMENTO } from '../../motore/mondo.js';
 import { statoTorneo, maestroSbloccato, etichettaTorneo } from '../../motore/torneo.js';
-import { EDIFICI } from '../../motore/layout-citta.js';
+import { layoutCitta } from '../../motore/layout-citta.js';
+import { datiLuogo, chiaveLuogo, luogoEsaurito, luogoVisibile, luoghiDi, premioScavo, scavateFatte } from '../../motore/luoghi.js';
 import { bordoCopertura, limitiCamera } from '../../motore/copertura.js';
+import { PUNTI } from './citta/punti.js';
 
 const W = 1200, H = 1400;  // città in portrait, si esce dal bordo basso
 
@@ -173,6 +175,11 @@ export class CittaScene extends Phaser.Scene {
       if (!this.cache.json.exists(cs)) this.load.json(cs, 'contenuti/citta/' + this.cittaId + '.json');
     }
   }
+
+  /** DOVE stanno le cose in questa città (edifici, palestra, ombre, tesori, palloncini,
+   *  Nonna Pina, Vido, cartelli): dal `layout` del suo JSON, con la base come rete di
+   *  sicurezza. Calcolato una volta in create(). Vedi motore/layout-citta.js. */
+  _layoutCitta() { return layoutCitta(this._contenuto()); }
 
   /** Contenuto della città: l'API se il server risponde, altrimenti il JSON statico del
    *  repo (hosting statico/offline). Stessa forma, così il resto della scena non cambia. */
@@ -380,11 +387,12 @@ export class CittaScene extends Phaser.Scene {
     this.solidi = this.physics.add.staticGroup();
     // Geometria in `motore/layout-citta.js` (dati puri): è la stessa che il test di layout
     // usa per garantire che nessun NPC finisca dentro/dietro una casa (bug del torneo).
-    for (const e of EDIFICI) this._edificio(e.x, e.y, e.w, e.h);
+    this.layout = this._layoutCitta();
+    for (const e of this.layout.edifici) this._edificio(e.x, e.y, e.w, e.h);
 
     // Palestra (se c'è un leader): edificio speciale con insegna luminosa.
     if (this.citta.leader) {
-      this._palestra(W * 0.5, 240);
+      this._palestra(this.layout.palestra.x, this.layout.palestra.y);
     } else if (this.citta.torneo) {
       // Luminia è il CLIMAX-torneo (niente palestra): invito luminoso sopra il Maestro.
       this._invitoTorneo();
@@ -459,6 +467,10 @@ export class CittaScene extends Phaser.Scene {
     }
 
     this._cartelli();   // #49 — cartelli leggibili (pratica di lettura)
+    // A2 — il luogo speciale: la cosa che c'è SOLO in questa città. Fuori dal blocco
+    // riservato alle città "piene": anche Pietropoli ne ha uno (il focolare), gated sul
+    // suo flag così non distrae durante l'intro guidata.
+    this._luoghi();
     if (this.cittaId !== 'pietropoli') {
       this._tesori();          // #46 — tesori nascosti (brillio)
       this._eventoCasuale();   // #64 — eventi gentili (Lumino smarrito, ecc.)
@@ -580,9 +592,7 @@ export class CittaScene extends Phaser.Scene {
     // CATTURARLI TUTTI: una volta catturato (se ne possiede la linea evolutiva) NON
     // ricompare al rientro → la città si avvicina al 100%. Sconfiggerlo SENZA catturarlo
     // lo lascia lì, così puoi tornare a prenderlo.
-    const spot = [
-      { x: 250, y: 650 }, { x: 470, y: 800 }, { x: 780, y: 560 }, { x: 920, y: 860 }, { x: 360, y: 470 }, { x: 700, y: 980 },
-    ];
+    const spot = this.layout.ombre;
     const quanti = Math.min(spot.length, specie.length);
     this._wildTotale = quanti;   // per la % di completamento del livello
     for (let i = 0; i < quanti; i++) {
@@ -1603,10 +1613,10 @@ export class CittaScene extends Phaser.Scene {
   _cartelli() {
     const segni = [
       // cartello uscita: ora è CLICCABILE (la freccia funziona → torna alla mappa).
-      { x: W / 2 + 200, y: H - 170, righe: [this.citta.nome.toUpperCase(), '↓ alla Mappa'], onTap: () => this._versoMappa() },
+      { ...this.layout.cartelli.uscita, righe: [this.citta.nome.toUpperCase(), '↓ alla Mappa'], onTap: () => this._versoMappa() },
     ];
-    if (this.citta.leader) segni.push({ x: W * 0.5 + 170, y: 330, righe: ['PALESTRA', 'Sfida il Capo!'] });
-    if (this.cittaId !== 'pietropoli') segni.push({ x: 150, y: 560, righe: ['LUMINI SELVATICI', 'Tocca le ombre!'] });
+    if (this.citta.leader) segni.push({ ...this.layout.cartelli.palestra, righe: ['PALESTRA', 'Sfida il Capo!'] });
+    if (this.cittaId !== 'pietropoli') segni.push({ ...this.layout.cartelli.selvatici, righe: ['LUMINI SELVATICI', 'Tocca le ombre!'] });
     for (const s of segni) { const c = this._unCartello(s.x, s.y, s.righe, s.onTap); if (s.onTap) this._cartelloUscita = c; }
   }
 
@@ -1628,26 +1638,6 @@ export class CittaScene extends Phaser.Scene {
     return c;
   }
 
-  /** #46 — Tesori nascosti: stelline/Lumiball dietro la vegetazione, con brillio al
-   *  passaggio. Raccolti una volta sola (flag). */
-  _tesori() {
-    const spot = [
-      { x: 160, y: 280, premio: 'stelline', n: 3 },
-      { x: W - 180, y: H - 320, premio: 'lumiball', n: 1 },
-    ];
-    this._tesoriAttivi = [];
-    spot.forEach((t, i) => {
-      const flag = 'tesoro:' + this.cittaId + ':' + i;
-      if (this._fatta(flag)) return;
-      const c = this.add.container(t.x, t.y).setDepth(t.y);
-      const brillo = this.add.star(0, 0, 4, 4, 12, 0xffe98a).setAlpha(0.9);
-      const ico = this.add.text(0, 0, t.premio === 'lumiball' ? '⚪' : '⭐', { fontSize: '20px' }).setOrigin(0.5);
-      c.add([brillo, ico]);
-      this.tweens.add({ targets: brillo, angle: 360, duration: 3000, repeat: -1 });
-      this.tweens.add({ targets: c, scale: 1.15, yoyo: true, repeat: -1, duration: 700, ease: 'Sine.inOut' });
-      this._tesoriAttivi.push({ ...t, flag, obj: c, preso: false });
-    });
-  }
 
   _aggiornaTesori() {
     if (!this._tesoriAttivi) return;
@@ -1670,98 +1660,7 @@ export class CittaScene extends Phaser.Scene {
     }
   }
 
-  /** #45 — Rivale amichevole ricorrente: "Vido" appare in 3 città (Acquaverde,
-   *  Voltopoli, Luminia) e la sua squadra CRESCE con te. Sfida una volta per città.
-   *  Bolle visive (niente voce di sistema). Vincere dà stelline. */
-  _rivale() {
-    const sfide = {
-      acquaverde: { avversario: 'brizzo', linea: 'Ehi! Sono Vido. Facciamo una sfida amichevole?' },
-      terraverde: { avversario: 'floranyx', linea: 'Ti ho seguito fin qui! Sono cresciuto anch\'io. 🌿' },
-      voltopoli: { avversario: 'voltrik', linea: 'Di nuovo tu! Sono più forte adesso. ⚡' },
-      pietrasanta: { avversario: 'granitor', linea: 'Manca poco al torneo: alleniamoci insieme! 🪨' },
-      luminia: { avversario: 'aquarex', linea: 'L\'ultima sfida, amico! Diamo il meglio! 🏆' },
-    };
-    const s = sfide[this.cittaId];
-    if (!s) return;
-    const x = 220, y = 480;
-    const c = this.add.container(x, y).setDepth(y);
-    // Vido (rivale ricorrente): sprite PNG anime, non più rettangolo+emoji. Uso 'bimbo6',
-    // non assegnato agli allenatori delle sue città (Acquaverde/Voltopoli/Luminia).
-    const tex = 'bimbo6';
-    if (this.textures.exists(tex)) {
-      const img = this.add.image(0, 16, tex).setOrigin(0.5, 1);
-      img.setScale(92 / (img.height || 92));
-      c.add([creaOmbra(this, Math.max(34, img.displayWidth * 0.85), 16), img]);
-    } else {
-      const g = this.add.graphics();
-      g.fillStyle(0x3a6ea5, 1); g.lineStyle(3, 0x1c3a5c, 1);
-      g.fillRoundedRect(-16, -10, 32, 40, 10); g.strokeRoundedRect(-16, -10, 32, 40, 10);
-      c.add([creaOmbra(this, 32, 30), g, this.add.text(0, -22, '🧒', { fontSize: '28px' }).setOrigin(0.5)]);
-    }
-    // ✓ verde quando il rivale è stato BATTUTO (come gli allenatori del roster): prima
-    // Vido non mostrava nulla anche dopo averlo sconfitto (era un NPC bespoke fuori da _npc).
-    const vintoRiv = this._fatta('sfida:rivale-' + this.cittaId + ':vinta');
-    c.add(this.add.text(0, -94, (vintoRiv ? '✓ ' : '') + 'Vido', {
-      fontFamily: 'system-ui', fontSize: '13px', color: vintoRiv ? '#bdf0a0' : '#fff', fontStyle: 'bold',
-      backgroundColor: vintoRiv ? '#1c4a22dd' : '#00000099', padding: { x: 5, y: 1 },
-    }).setOrigin(0.5));
-    // "Già sfidato" = ho parlato con lui E l'ho davvero battuto. Il solo flag di dialogo
-    // non basta: se la sfida si interrompe (app chiusa a metà battaglia) Vido tornerebbe a
-    // salutare e basta — e a Luminia il Maestro resterebbe bloccato dal gate del rivale.
-    const giaSfidato = this._fatta('rivale:' + this.cittaId) && vintoRiv;
-    const excl = this.add.text(0, -110, giaSfidato ? '💬' : '⚔️', { fontSize: '22px' }).setOrigin(0.5).setVisible(false);
-    c.add(excl);
-    this.tweens.add({ targets: excl, y: -116, yoyo: true, repeat: -1, duration: 500 });
-    const hit = this.add.rectangle(x, y - 30, 76, 104, 0xffffff, 0.001).setDepth(y + 1).setInteractive({ useHandCursor: true });
-    hit.on('pointerdown', () => {
-      if (Math.hypot(this.pietro.x - x, this.pietro.y - y) > 160) { voce.parla('pepole:vicino'); return; }
-      if (this._inDialogo || this._inOverlay || this._introInCorso || this._inTransizione) return;
-      if (giaSfidato) { this._bollaCitta(x, y - 70, 'Bella sfida! Alla prossima, amico! 👋'); return; }
-      this._bollaCitta(x, y - 70, s.linea);
-      this._segna('rivale:' + this.cittaId);
-      this.time.delayedCall(1400, () => this._avviaBattaglia({ avversario: s.avversario, selvatico: false, idSfida: 'rivale-' + this.cittaId }));
-    });
-    this._rivaleObj = { x, y, excl };
-  }
 
-  /** #44 — NPC ricorrente e ricco: "Nonna Pina" appare in ogni città con una
-   *  battuta gentile (bolla visiva, niente voce di sistema) e un regalo una-tantum. */
-  _civile() {
-    const x = 980, y = 480;
-    const c = this.add.container(x, y).setDepth(y);
-    // Nonna Pina: sprite vero (riuso la nonnina PNG) invece dell'antiestetico rettangolo viola.
-    if (this.textures.exists('nonnatella')) {
-      const img = this.add.image(0, 16, 'nonnatella').setOrigin(0.5, 1);
-      img.setScale(96 / (img.height || 96));
-      c.add([creaOmbra(this, Math.max(34, img.displayWidth * 0.85), 16), img]);
-    } else {
-      const g = this.add.graphics();
-      g.fillStyle(0x9a6fb0, 1); g.lineStyle(3, 0x5a3b6a, 1);
-      g.fillRoundedRect(-16, -10, 32, 40, 10); g.strokeRoundedRect(-16, -10, 32, 40, 10);
-      c.add([creaOmbra(this, 32, 30), g, this.add.text(0, -22, '👵', { fontSize: '28px' }).setOrigin(0.5)]);
-    }
-    const excl = this.add.text(0, -52, '💬', { fontSize: '20px' }).setOrigin(0.5).setVisible(false);
-    c.add(excl);
-    this.tweens.add({ targets: excl, y: -58, yoyo: true, repeat: -1, duration: 500 });
-    const hit = this.add.rectangle(x, y, 70, 90, 0xffffff, 0.001).setDepth(y + 1).setInteractive({ useHandCursor: true });
-    const battute = {
-      acquaverde: 'Che bei Lumini! Tieni, un regalino. ⭐', terraverde: 'I fiori qui sono magici, lo sai?',
-      voltopoli: 'Attento alle scintille, piccolo! ⚡', pietrasanta: 'Le pietre raccontano storie antiche.',
-      luminia: 'Sei arrivato fin qui? Che campione! 🏆',
-    };
-    hit.on('pointerdown', () => {
-      if (Math.hypot(this.pietro.x - x, this.pietro.y - y) > 150) { voce.parla('pepole:vicino'); return; }
-      const flag = 'regalo:' + this.cittaId;
-      const primo = !this._fatta(flag);
-      this._bollaCitta(x, y - 70, battute[this.cittaId] || 'Buona avventura, piccolo!');
-      if (primo) {
-        this._segna(flag);
-        if (window.GS) { window.GS.stelline = (window.GS.stelline || 0) + 3; salvaGS(); }
-        audio.suono('stellina'); Juice.coriandoli(this, x, y - 30, 12);
-      }
-    });
-    this._civileObj = { x, y, excl };
-  }
 
   /** Bolla di dialogo VISIVA in città (niente voce di sistema su testi non doppiati). */
   _bollaCitta(x, y, testo) {
@@ -1777,41 +1676,6 @@ export class CittaScene extends Phaser.Scene {
     this.time.delayedCall(2600, () => { if (this._bolla === c) this._bolla = null; c.destroy(); });
   }
 
-  /** PALLONCINI-INDOVINELLO: palloncini colorati che ondeggiano e che, TOCCATI,
-   *  lanciano una domanda del trivia didattico (aritmetica/vocabolario per età) e poi
-   *  SCOPPIANO con coriandoli. OPZIONALI ma piacevoli: niente punizioni (il quiz è
-   *  gentile). Persistiti per-palloncino (flag storico `fiore:<id>:<i>`, conservato per
-   *  i salvataggi), così non riappaiono una volta scoppiati. */
-  _missione() {
-    if (this._fatta('fioritrivia:' + this.cittaId)) return;   // tutti già scoppiati
-    // Cartello-invito (non un obbligo).
-    const seg = this.add.container(900, 600).setDepth(600);
-    seg.add(this.add.text(0, 0, '🎈', { fontSize: '26px' }).setOrigin(0.5));
-    seg.add(this.add.text(0, 24, 'Fai scoppiare i palloncini!', { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#fff', fontStyle: 'bold', backgroundColor: '#00000088', padding: { x: 4, y: 1 } }).setOrigin(0.5));
-    this._fiori = [];
-    const COLORI = [0xff5d73, 0x4db6ff, 0xffd23f, 0x7ed957, 0xb98cff, 0xff9e3d];
-    const spot = [[260, 360], [700, 1050], [1040, 820], [480, 720]];
-    spot.forEach(([x, y], i) => {
-      const flag = 'fiore:' + this.cittaId + ':' + i;
-      if (this._fatta(flag)) return;   // già scoppiato
-      const colore = COLORI[i % COLORI.length];
-      const cont = this.add.container(x, y).setDepth(y);
-      const filo = this.add.rectangle(0, 30, 2, 30, 0xffffff, 0.45).setOrigin(0.5, 0);
-      const nodo = this.add.triangle(0, 30, 0, 0, 9, 0, 4.5, 8, colore);
-      const corpo = this.add.ellipse(0, 0, 46, 56, colore).setStrokeStyle(3, shade(colore, -0.28));
-      const luce = this.add.ellipse(-9, -13, 13, 19, 0xffffff, 0.5);
-      const q = this.add.text(0, -46, '?', { fontFamily: 'system-ui', fontSize: '22px', color: '#fff', fontStyle: 'bold', stroke: '#444', strokeThickness: 4 }).setOrigin(0.5).setVisible(false);
-      cont.add([filo, nodo, corpo, luce, q]);
-      // ondeggio dolce: salita/discesa + leggero dondolio (durate sfasate per varietà).
-      this.tweens.add({ targets: cont, y: y - 12, yoyo: true, repeat: -1, duration: 1500 + i * 130, ease: 'Sine.inOut' });
-      this.tweens.add({ targets: cont, angle: 4, yoyo: true, repeat: -1, duration: 1100 + i * 90, ease: 'Sine.inOut' });
-      const hit = this.add.rectangle(x, y, 72, 96, 0xffffff, 0.001).setDepth(y + 1).setInteractive({ useHandCursor: true });
-      const obj = { x, y, flag, cont, q, hit, fatto: false, colore };
-      hit.on('pointerdown', () => this._toccaFiore(obj));
-      this._fiori.push(obj);
-    });
-    this._fioriSeg = seg;
-  }
 
   /** Tocco su un palloncino → indovinello didattico (1 domanda) → POP! Lontano: Pepole
    *  invita (gestito altrove). Tappabile da ovunque (niente gate di prossimità). */
@@ -1868,58 +1732,7 @@ export class CittaScene extends Phaser.Scene {
     for (const f of (this._fiori || [])) if (!f.fatto && f.cont) this.tweens.add({ targets: f.cont, scale: 1.35, yoyo: true, duration: 260, repeat: 2 });
   }
 
-  /** #48 — Abilità esplorative attive (HM dolci): un ostacolo (masso/acqua) si
-   *  supera SOLO se in squadra c'è un Lumino dell'elemento giusto, che usa la sua
-   *  abilità esplorativa. Dietro c'è un piccolo tesoro. Persistito (flag). */
-  /** F2 — Abilità esplorative DATA-DRIVEN: ostacoli-enigma dal JSON della città (campo
-   *  `ostacoli`). Ognuno si apre col Lumino dell'ELEMENTO giusto in squadra (regole in
-   *  motore/mondo.js). Toccandolo: se hai l'amico adatto si apre (animazione + premio,
-   *  salvato); altrimenti indizio gentile, MAI un blocco. Se la città non ha dati ostacoli
-   *  si usa il vecchio HM per-elemento (fallback bespoke). */
-  _ostacoli() {
-    const cont = this._contenuto();
-    const lista = (cont && Array.isArray(cont.ostacoli)) ? cont.ostacoli : null;
-    if (!lista || !lista.length) { this._ostacoloHM(); return; }
-    this._ostacoliObj = [];
-    for (const o of lista) {
-      if (!o || !datiOstacolo(o.tipo)) continue;
-      if (this._fatta('ostacolo:' + this.cittaId + ':' + o.id)) continue;   // già aperto
-      const d = datiOstacolo(o.tipo);
-      const c = this.add.container(o.x, o.y).setDepth(o.y);
-      c.add(this.add.text(0, 0, d.ico, { fontSize: '44px' }).setOrigin(0.5));
-      const q = this.add.text(0, -42, '?', { fontFamily: 'system-ui', fontSize: '22px', color: '#ffd23f', fontStyle: 'bold', stroke: '#3a2c22', strokeThickness: 3 }).setOrigin(0.5);
-      c.add(q);
-      this.tweens.add({ targets: q, y: -48, yoyo: true, repeat: -1, duration: 500 });
-      const hit = this.add.rectangle(o.x, o.y, 74, 74, 0xffffff, 0.001).setDepth(o.y + 1).setInteractive({ useHandCursor: true });
-      const obj = { id: o.id, tipo: o.tipo, premio: o.premio, x: o.x, y: o.y, d, cont: c, q, hit };
-      hit.on('pointerdown', () => this._provaOstacolo(obj));
-      this._ostacoliObj.push(obj);
-    }
-  }
 
-  _provaOstacolo(obj) {
-    if (this._inDialogo || this._inOverlay || this._inTransizione || this._introInCorso) return;
-    if (Math.hypot(this.pietro.x - obj.x, this.pietro.y - obj.y) > 150) { voce.parla('pepole:vicino'); return; }
-    const squadra = ((window.GS && window.GS.team) || []).map((l) => ({ specie: l.specie, elemento: LUMINI[l.specie] && LUMINI[l.specie].elemento }));
-    const aiut = aiutantePerOstacolo(obj.tipo, squadra);
-    if (!aiut) {
-      this._bollaSchermo(this.W / 2, this.H * 0.2, 'Serve un amico di ' + (NOME_ELEMENTO[obj.tipo] || obj.tipo) + '!\n' + obj.d.testo);
-      return;
-    }
-    // Si apre: l'amico usa la sua abilità esplorativa.
-    this._segna('ostacolo:' + this.cittaId + ':' + obj.id);
-    const base = LUMINI[aiut.specie] || {};
-    const ab = (base.abilitaEsplorativa && base.abilitaEsplorativa.nome) || 'la sua abilità';
-    audio.suono('mossaSpeciale'); audio.suono('vittoria');
-    Juice.coriandoli(this, obj.x, obj.y, 22);
-    obj.hit.destroy();
-    this.tweens.add({ targets: obj.cont, alpha: 0, scale: 0.4, duration: 600, onComplete: () => obj.cont.destroy() });
-    const msg = this.add.text(obj.x, obj.y - 56, `${base.nome} usa ${ab}!\n${obj.d.azione}.`, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#fff', fontStyle: 'bold', backgroundColor: '#2c7a33dd', padding: { x: 8, y: 4 }, align: 'center', wordWrap: { width: 240 },
-    }).setOrigin(0.5).setDepth(9999);
-    this.tweens.add({ targets: msg, y: msg.y - 24, alpha: 0, delay: 1200, duration: 800, onComplete: () => msg.destroy() });
-    this._premioOstacolo(obj.premio, obj.x, obj.y);
-  }
 
   /** Premio nascosto dietro l'ostacolo: stelline / oggetto (borsa) / un Lumino nuovo. */
   _premioOstacolo(premio, x, y) {
@@ -1943,45 +1756,17 @@ export class CittaScene extends Phaser.Scene {
     }
   }
 
-  /** F3 — Palco della Gara di Stile (se la città ospita una `gara` nel JSON). Toccandolo,
-   *  se sei vicino, parte la GaraScene (competizione non-combattiva). */
-  _gara() {
-    const cont = this._contenuto();
-    const g = cont && cont.gara;
-    if (!g || !g.id) return;
-    const x = g.x || 600, y = g.y || 1100;
-    const c = this.add.container(x, y).setDepth(y);
-    c.add(this.add.text(0, 0, '🎪', { fontSize: '46px' }).setOrigin(0.5));
-    c.add(this.add.text(0, -44, '🌟 Gara di Stile!', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#fff', fontStyle: 'bold', backgroundColor: '#6a4cc4dd', padding: { x: 6, y: 2 },
-    }).setOrigin(0.5));
-    this.tweens.add({ targets: c, y: y - 6, yoyo: true, repeat: -1, duration: 1000, ease: 'Sine.inOut' });
-    const hit = this.add.rectangle(x, y, 84, 88, 0xffffff, 0.001).setDepth(y + 1).setInteractive({ useHandCursor: true });
-    hit.on('pointerdown', () => {
-      if (this._inDialogo || this._inOverlay || this._inTransizione || this._introInCorso) return;
-      if (Math.hypot(this.pietro.x - x, this.pietro.y - y) > 160) { voce.parla('pepole:vicino'); return; }
-      voce.stop();
-      if (window.GS) { window.GS.cittaCorrente = this.cittaId; salvaGS(); }
-      this.scene.start('GaraScene', { gara: g.id, ritorno: 'CittaScene' });
-    });
-  }
 
-  _ostacoloHM() {
-    const el = this.citta.elemento;
-    const conf = {
-      roccia: { ico: '🪨', testo: 'Un masso blocca il passaggio…', azione: 'sposta il masso' },
-      acqua: { ico: '🌊', testo: 'Acqua profonda da attraversare…', azione: 'attraversa l\'acqua' },
-      natura: { ico: '🌿', testo: 'Rovi fitti sbarrano la via…', azione: 'apre un varco' },
-      elettricita: { ico: '🔌', testo: 'Un cancello spento e bloccato…', azione: 'dà corrente' },
-    }[el];
-    if (!conf) return;
-    if (this._fatta('hm:' + this.cittaId)) return;
-    const x = W - 150, y = 360;
-    const c = this.add.container(x, y).setDepth(y);
-    c.add(this.add.text(0, 0, conf.ico, { fontSize: '46px' }).setOrigin(0.5));
-    c.add(this.add.text(0, 34, '?', { fontFamily: 'system-ui', fontSize: '22px', color: '#ffd23f', fontStyle: 'bold' }).setOrigin(0.5));
-    this._hm = { x, y, el, conf, obj: c, fatto: false };
-  }
+
+
+
+
+
+
+
+
+
+
 
   _aggiornaHM() {
     const h = this._hm;
@@ -2010,17 +1795,6 @@ export class CittaScene extends Phaser.Scene {
     }
   }
 
-  /** #64 — Evento gentile casuale: un Lumino smarrito da riportare a casa (grazie + stelline). */
-  _eventoCasuale() {
-    if (Math.random() > 0.35) return;   // non sempre: è una sorpresa
-    const specie = (this.citta.luminiSelvatici && Phaser.Utils.Array.GetRandom(this.citta.luminiSelvatici)) || 'brizzo';
-    const x = W * (0.3 + Math.random() * 0.4), y = H * (0.5 + Math.random() * 0.2);
-    const lum = new Lumino(this, x, y, specie).setScale(0.55).setDepth(y);
-    const ex = this.add.text(x, y - 50, '❓', { fontSize: '24px' }).setOrigin(0.5).setDepth(y + 1);
-    this.tweens.add({ targets: ex, y: y - 58, yoyo: true, repeat: -1, duration: 500 });
-    this.tweens.add({ targets: lum, x: x + (Math.random() > 0.5 ? 40 : -40), yoyo: true, repeat: -1, duration: 1800, ease: 'Sine.inOut' });
-    this._eventoLumino = { x, y, lum, ex, preso: false };
-  }
 
   _aggiornaEvento() {
     const e = this._eventoLumino;
@@ -2037,3 +1811,8 @@ export class CittaScene extends Phaser.Scene {
     }
   }
 }
+
+// C1 — I PUNTI D'INTERESSE (forzieri, palloncini, Nonna Pina, Vido, il luogo speciale, la
+// Gara, gli ostacoli, gli incontri gentili) vivono in `citta/punti.js` e si rimontano qui
+// sul prototipo: stessi metodi, stesso `this`, file diviso. Vedi l'intestazione di quel file.
+Object.assign(CittaScene.prototype, PUNTI);

@@ -26,18 +26,27 @@
       {
         "tipo": "dialogo",
         "battute": [
-          { "id": "voltopoli:arrivo", "speaker": "narratore" }
+          {
+            "id": "voltopoli:arrivo",
+            "speaker": "narratore"
+          }
         ]
       },
-      { "tipo": "quiz", "forza": { "tipo": "sequenza" }, "segna": "voltopoli:intro" }
+      {
+        "tipo": "quiz",
+        "forza": {
+          "tipo": "sequenza"
+        },
+        "segna": "voltopoli:intro"
+      }
     ]
   },
   "npc": [
     {
       "id": "v-all1",
       "tipo": "allenatore",
-      "x": 860,
-      "y": 700,
+      "x": 700,
+      "y": 860,
       "nome": "Bruno",
       "tex": "bimbo3",
       "voce": "allenatore:1",
@@ -58,8 +67,8 @@
     {
       "id": "v-all2",
       "tipo": "allenatore",
-      "x": 620,
-      "y": 700,
+      "x": 430,
+      "y": 480,
       "nome": "Cleo",
       "tex": "bimba3",
       "voce": "allenatrice:2",
@@ -81,7 +90,7 @@
       "id": "v-all3",
       "tipo": "allenatore",
       "x": 980,
-      "y": 520,
+      "y": 560,
       "nome": "Sara",
       "tex": "bimbo4",
       "voce": "allenatrice:3",
@@ -102,8 +111,8 @@
     {
       "id": "rik",
       "tipo": "leader",
-      "x": 600,
-      "y": 330,
+      "x": 930,
+      "y": 380,
       "speaker": "rik",
       "emoji": "⚡",
       "colore": "#ffd23f",
@@ -141,8 +150,8 @@
     {
       "id": "meccanismo",
       "tipo": "elettricita",
-      "x": 180,
-      "y": 1150,
+      "x": 160,
+      "y": 1240,
       "premio": {
         "tipo": "stelline",
         "n": 6
@@ -151,8 +160,8 @@
     {
       "id": "soffio",
       "tipo": "aria",
-      "x": 1050,
-      "y": 1150,
+      "x": 1040,
+      "y": 1240,
       "premio": {
         "tipo": "oggetto",
         "id": "lumiball",
@@ -162,7 +171,134 @@
   ],
   "gara": {
     "id": "gara-luci",
-    "x": 600,
-    "y": 1100
-  }
+    "x": 760,
+    "y": 1060
+  },
+  "layout": {
+    "_nota": "Officina elettrica: case allineate come capannoni, corridoi larghi in mezzo.",
+    "edifici": [
+      {
+        "x": 250,
+        "y": 240,
+        "w": 190,
+        "h": 130
+      },
+      {
+        "x": 600,
+        "y": 1120,
+        "w": 190,
+        "h": 140
+      },
+      {
+        "x": 1000,
+        "y": 860,
+        "w": 180,
+        "h": 140
+      },
+      {
+        "x": 250,
+        "y": 760,
+        "w": 180,
+        "h": 130
+      }
+    ],
+    "palestra": {
+      "x": 930,
+      "y": 250
+    },
+    "ombre": [
+      {
+        "x": 160,
+        "y": 1080
+      },
+      {
+        "x": 560,
+        "y": 660
+      },
+      {
+        "x": 820,
+        "y": 700
+      },
+      {
+        "x": 1080,
+        "y": 1120
+      },
+      {
+        "x": 420,
+        "y": 1180
+      },
+      {
+        "x": 760,
+        "y": 420
+      }
+    ],
+    "tesori": [
+      {
+        "x": 150,
+        "y": 560
+      },
+      {
+        "x": 1080,
+        "y": 300
+      }
+    ],
+    "palloncini": [
+      {
+        "x": 620,
+        "y": 240
+      },
+      {
+        "x": 300,
+        "y": 980
+      },
+      {
+        "x": 880,
+        "y": 1180
+      },
+      {
+        "x": 1060,
+        "y": 660
+      }
+    ],
+    "cartelloPalloncini": {
+      "x": 480,
+      "y": 760
+    },
+    "civile": {
+      "x": 600,
+      "y": 480
+    },
+    "rivale": {
+      "x": 160,
+      "y": 420
+    },
+    "cartelli": {
+      "uscita": {
+        "x": 760,
+        "y": 1250
+      },
+      "palestra": {
+        "x": 1080,
+        "y": 420
+      },
+      "selvatici": {
+        "x": 150,
+        "y": 900
+      }
+    }
+  },
+  "luoghi": [
+    {
+      "id": "quadro-luci",
+      "tipo": "memoria",
+      "x": 880,
+      "y": 620,
+      "titolo": "Il quadro delle luci",
+      "battuta": "Guarda bene e ripeti la sequenza!",
+      "premio": {
+        "tipo": "stelline",
+        "n": 5
+      }
+    }
+  ]
 }

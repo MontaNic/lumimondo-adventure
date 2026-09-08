@@ -26,7 +26,10 @@
       {
         "tipo": "dialogo",
         "battute": [
-          { "id": "pietrasanta:arrivo", "speaker": "narratore" }
+          {
+            "id": "pietrasanta:arrivo",
+            "speaker": "narratore"
+          }
         ],
         "segna": "pietrasanta:intro"
       }
@@ -36,8 +39,8 @@
     {
       "id": "p-all1",
       "tipo": "allenatore",
-      "x": 860,
-      "y": 700,
+      "x": 880,
+      "y": 760,
       "nome": "Vito",
       "tex": "bimbo5",
       "voce": "allenatore:1",
@@ -58,8 +61,8 @@
     {
       "id": "p-all2",
       "tipo": "allenatore",
-      "x": 620,
-      "y": 700,
+      "x": 340,
+      "y": 760,
       "nome": "Enea",
       "tex": "bimbo6",
       "voce": "allenatore:2",
@@ -80,8 +83,8 @@
     {
       "id": "p-all3",
       "tipo": "allenatore",
-      "x": 980,
-      "y": 520,
+      "x": 600,
+      "y": 980,
       "nome": "Ada",
       "tex": "bimba1",
       "voce": "allenatrice:3",
@@ -103,7 +106,7 @@
       "id": "rocco",
       "tipo": "leader",
       "x": 600,
-      "y": 330,
+      "y": 380,
       "speaker": "rocco",
       "emoji": "🧗",
       "colore": "#9b8579",
@@ -142,7 +145,7 @@
       "id": "masso",
       "tipo": "roccia",
       "x": 180,
-      "y": 1180,
+      "y": 1240,
       "premio": {
         "tipo": "stelline",
         "n": 6
@@ -151,8 +154,8 @@
     {
       "id": "guado",
       "tipo": "acqua",
-      "x": 1040,
-      "y": 1180,
+      "x": 1030,
+      "y": 1240,
       "premio": {
         "tipo": "oggetto",
         "id": "trifoglio",
@@ -163,6 +166,129 @@
   "gara": {
     "id": "gara-roccia",
     "x": 600,
-    "y": 1100
-  }
+    "y": 1240
+  },
+  "layout": {
+    "_nota": "Cava di roccia: case sui bordi, un grande spiazzo centrale dove ci si sfida.",
+    "edifici": [
+      {
+        "x": 180,
+        "y": 420,
+        "w": 170,
+        "h": 120
+      },
+      {
+        "x": 1030,
+        "y": 420,
+        "w": 170,
+        "h": 120
+      },
+      {
+        "x": 180,
+        "y": 1080,
+        "w": 170,
+        "h": 120
+      },
+      {
+        "x": 1030,
+        "y": 1080,
+        "w": 170,
+        "h": 120
+      }
+    ],
+    "palestra": {
+      "x": 600,
+      "y": 240
+    },
+    "ombre": [
+      {
+        "x": 420,
+        "y": 620
+      },
+      {
+        "x": 780,
+        "y": 620
+      },
+      {
+        "x": 200,
+        "y": 880
+      },
+      {
+        "x": 1000,
+        "y": 880
+      },
+      {
+        "x": 880,
+        "y": 1200
+      },
+      {
+        "x": 420,
+        "y": 1080
+      }
+    ],
+    "tesori": [
+      {
+        "x": 160,
+        "y": 240
+      },
+      {
+        "x": 1040,
+        "y": 240
+      }
+    ],
+    "palloncini": [
+      {
+        "x": 600,
+        "y": 620
+      },
+      {
+        "x": 180,
+        "y": 660
+      },
+      {
+        "x": 1020,
+        "y": 660
+      },
+      {
+        "x": 800,
+        "y": 1080
+      }
+    ],
+    "cartelloPalloncini": {
+      "x": 860,
+      "y": 620
+    },
+    "civile": {
+      "x": 860,
+      "y": 900
+    },
+    "rivale": {
+      "x": 300,
+      "y": 900
+    },
+    "cartelli": {
+      "uscita": {
+        "x": 780,
+        "y": 1250
+      },
+      "palestra": {
+        "x": 790,
+        "y": 330
+      },
+      "selvatici": {
+        "x": 340,
+        "y": 540
+      }
+    }
+  },
+  "luoghi": [
+    {
+      "id": "cava",
+      "tipo": "scavo",
+      "x": 760,
+      "y": 420,
+      "titolo": "La cava",
+      "battuta": "Sotto questi sassi si nasconde qualcosa."
+    }
+  ]
 }

@@ -4,57 +4,314 @@
   "nome": "Pietropoli",
   "ordine": 0,
   "elemento": null,
-  "palette": { "primario": "#ff8c28", "scuro": "#a85614" },
+  "palette": {
+    "primario": "#ff8c28",
+    "scuro": "#a85614"
+  },
   "descrizione": "La città di Pietro. Qui comincia tutto.",
   "medaglia": null,
-  "luminiSelvatici": ["foglino"],
-  "pos": { "x": 140, "y": 540 },
+  "luminiSelvatici": [
+    "foglino"
+  ],
+  "pos": {
+    "x": 140,
+    "y": 540
+  },
   "regia": {
     "intro": true,
     "gate": "pietropoli:fatta",
     "beats": [
-      { "tipo": "gruppo", "gate": "intro:gioco", "segna": "intro:gioco", "beats": [
-        { "tipo": "presentazione" },
-        { "tipo": "dialogo", "battute": [
-          { "id": "pietro:presentazione", "speaker": "pietro" },
-          { "id": "pietro:sogno", "speaker": "pietro" },
-          { "id": "narratore:benvenuto", "speaker": "narratore" }
-        ] }
-      ] },
-      { "tipo": "gruppo", "gate": "pietropoli:pepole", "segna": "pietropoli:pepole", "beats": [
-        { "tipo": "guida", "pos": { "x": 600, "y": 1040 }, "colore": "#ffe08a", "poi": [
-          { "tipo": "dialogo", "battute": [
-            { "id": "pepole:saluto1", "speaker": "pepole" },
-            { "id": "pietro:partenza", "speaker": "pietro" }
-          ] },
-          { "tipo": "pepoleSalta" }
-        ] }
-      ] },
-      { "tipo": "gruppo", "gate": "starter:scelto", "beats": [
-        { "tipo": "guida", "pos": { "x": 380, "y": 360 }, "colore": "#ffd23f", "poi": [
-          { "tipo": "dialogo", "battute": [{ "id": "nonnatella:scrigno", "speaker": "nonnatella" }] },
-          { "tipo": "scrignoStarter", "segna": "starter:scelto" },
-          { "tipo": "dialogoStarter" },
-          { "tipo": "conta", "n": 5, "tema": "lumini" },
-          { "tipo": "dialogo", "battute": [{ "id": "nonnatella:conta-ok", "speaker": "nonnatella" }] }
-        ] }
-      ] },
-      { "tipo": "gruppo", "gate": "sfida:pietropoli-bimbo:vinta", "beats": [
-        { "tipo": "guida", "pos": { "x": 820, "y": 720 }, "colore": "#9ecbff", "tex": "bimbo", "poi": [
-          { "tipo": "demoStelline" },
-          { "tipo": "dialogo", "battute": [
-            { "id": "bimbo:sfida", "speaker": "bambino", "nome": "Giorgio" },
-            { "id": "pepole:come-giocare", "speaker": "pepole" },
-            { "id": "lauri:tipi", "speaker": "pepole" },
-            { "id": "lauri:incoraggia", "speaker": "pepole" }
-          ] },
-          { "tipo": "avviaBattaglia", "cfg": { "avversario": "foglino", "selvatico": false, "idSfida": "pietropoli-bimbo" } }
-        ] }
-      ] },
-      { "tipo": "gruppo", "gate": "pietropoli:spiegafine", "segna": "pietropoli:spiegafine", "beats": [
-        { "tipo": "dialogo", "battute": [{ "id": "pepole:come-funziona", "speaker": "pepole" }] }
-      ] },
-      { "tipo": "fineLivello", "nome": "Pietropoli", "segnaFatta": "pietropoli:fatta" }
+      {
+        "tipo": "gruppo",
+        "gate": "intro:gioco",
+        "segna": "intro:gioco",
+        "beats": [
+          {
+            "tipo": "presentazione"
+          },
+          {
+            "tipo": "dialogo",
+            "battute": [
+              {
+                "id": "pietro:presentazione",
+                "speaker": "pietro"
+              },
+              {
+                "id": "pietro:sogno",
+                "speaker": "pietro"
+              },
+              {
+                "id": "narratore:benvenuto",
+                "speaker": "narratore"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tipo": "gruppo",
+        "gate": "pietropoli:pepole",
+        "segna": "pietropoli:pepole",
+        "beats": [
+          {
+            "tipo": "guida",
+            "pos": {
+              "x": 600,
+              "y": 1040
+            },
+            "colore": "#ffe08a",
+            "poi": [
+              {
+                "tipo": "dialogo",
+                "battute": [
+                  {
+                    "id": "pepole:saluto1",
+                    "speaker": "pepole"
+                  },
+                  {
+                    "id": "pietro:partenza",
+                    "speaker": "pietro"
+                  }
+                ]
+              },
+              {
+                "tipo": "pepoleSalta"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tipo": "gruppo",
+        "gate": "starter:scelto",
+        "beats": [
+          {
+            "tipo": "guida",
+            "pos": {
+              "x": 380,
+              "y": 360
+            },
+            "colore": "#ffd23f",
+            "poi": [
+              {
+                "tipo": "dialogo",
+                "battute": [
+                  {
+                    "id": "nonnatella:scrigno",
+                    "speaker": "nonnatella"
+                  }
+                ]
+              },
+              {
+                "tipo": "scrignoStarter",
+                "segna": "starter:scelto"
+              },
+              {
+                "tipo": "dialogoStarter"
+              },
+              {
+                "tipo": "conta",
+                "n": 5,
+                "tema": "lumini"
+              },
+              {
+                "tipo": "dialogo",
+                "battute": [
+                  {
+                    "id": "nonnatella:conta-ok",
+                    "speaker": "nonnatella"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tipo": "gruppo",
+        "gate": "sfida:pietropoli-bimbo:vinta",
+        "beats": [
+          {
+            "tipo": "guida",
+            "pos": {
+              "x": 820,
+              "y": 720
+            },
+            "colore": "#9ecbff",
+            "tex": "bimbo",
+            "poi": [
+              {
+                "tipo": "demoStelline"
+              },
+              {
+                "tipo": "dialogo",
+                "battute": [
+                  {
+                    "id": "bimbo:sfida",
+                    "speaker": "bambino",
+                    "nome": "Giorgio"
+                  },
+                  {
+                    "id": "pepole:come-giocare",
+                    "speaker": "pepole"
+                  },
+                  {
+                    "id": "lauri:tipi",
+                    "speaker": "pepole"
+                  },
+                  {
+                    "id": "lauri:incoraggia",
+                    "speaker": "pepole"
+                  }
+                ]
+              },
+              {
+                "tipo": "avviaBattaglia",
+                "cfg": {
+                  "avversario": "foglino",
+                  "selvatico": false,
+                  "idSfida": "pietropoli-bimbo"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tipo": "gruppo",
+        "gate": "pietropoli:spiegafine",
+        "segna": "pietropoli:spiegafine",
+        "beats": [
+          {
+            "tipo": "dialogo",
+            "battute": [
+              {
+                "id": "pepole:come-funziona",
+                "speaker": "pepole"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tipo": "fineLivello",
+        "nome": "Pietropoli",
+        "segnaFatta": "pietropoli:fatta"
+      }
     ]
-  }
+  },
+  "layout": {
+    "_nota": "Borgo di partenza: poche case, tanto prato, niente palestra. Deve sembrare piccolo e sicuro.",
+    "edifici": [
+      {
+        "x": 250,
+        "y": 300,
+        "w": 180,
+        "h": 130
+      },
+      {
+        "x": 940,
+        "y": 290,
+        "w": 180,
+        "h": 140
+      },
+      {
+        "x": 320,
+        "y": 1070,
+        "w": 190,
+        "h": 150
+      }
+    ],
+    "palestra": {
+      "x": 600,
+      "y": 240
+    },
+    "ombre": [
+      {
+        "x": 250,
+        "y": 700
+      },
+      {
+        "x": 500,
+        "y": 560
+      },
+      {
+        "x": 860,
+        "y": 640
+      },
+      {
+        "x": 980,
+        "y": 900
+      },
+      {
+        "x": 420,
+        "y": 900
+      },
+      {
+        "x": 700,
+        "y": 1120
+      }
+    ],
+    "tesori": [
+      {
+        "x": 160,
+        "y": 480
+      },
+      {
+        "x": 1060,
+        "y": 660
+      }
+    ],
+    "palloncini": [
+      {
+        "x": 200,
+        "y": 900
+      },
+      {
+        "x": 760,
+        "y": 420
+      },
+      {
+        "x": 1040,
+        "y": 1080
+      },
+      {
+        "x": 560,
+        "y": 760
+      }
+    ],
+    "cartelloPalloncini": {
+      "x": 880,
+      "y": 760
+    },
+    "civile": {
+      "x": 1020,
+      "y": 480
+    },
+    "rivale": {
+      "x": 160,
+      "y": 1000
+    },
+    "cartelli": {
+      "uscita": {
+        "x": 800,
+        "y": 1230
+      },
+      "selvatici": {
+        "x": 150,
+        "y": 600
+      }
+    }
+  },
+  "luoghi": [
+    {
+      "id": "focolare",
+      "tipo": "riposo",
+      "x": 760,
+      "y": 880,
+      "titolo": "Il focolare di Nonna Tella",
+      "battuta": "Siediti un momento: i tuoi Lumini riprendono fiato.",
+      "gate": "pietropoli:fatta"
+    }
+  ]
 }

@@ -23,8 +23,8 @@
     {
       "id": "l-all1",
       "tipo": "allenatore",
-      "x": 860,
-      "y": 700,
+      "x": 880,
+      "y": 640,
       "nome": "Remo",
       "tex": "bimbo7",
       "voce": "allenatore:3",
@@ -45,8 +45,8 @@
     {
       "id": "l-all2",
       "tipo": "allenatore",
-      "x": 620,
-      "y": 700,
+      "x": 320,
+      "y": 640,
       "nome": "Lia",
       "tex": "bimbo8",
       "voce": "allenatrice:3",
@@ -67,8 +67,8 @@
     {
       "id": "l-all3",
       "tipo": "allenatore",
-      "x": 980,
-      "y": 520,
+      "x": 600,
+      "y": 880,
       "nome": "Bea",
       "tex": "bimba2",
       "voce": "allenatrice:3",
@@ -90,7 +90,7 @@
       "id": "maestro",
       "tipo": "leader",
       "x": 600,
-      "y": 510,
+      "y": 480,
       "speaker": "maestro",
       "emoji": "👑",
       "colore": "#ffd23f",
@@ -137,8 +137,8 @@
     {
       "id": "grotta",
       "tipo": "fuoco",
-      "x": 180,
-      "y": 1180,
+      "x": 420,
+      "y": 1020,
       "premio": {
         "tipo": "stelline",
         "n": 8
@@ -147,8 +147,8 @@
     {
       "id": "rovi",
       "tipo": "natura",
-      "x": 1040,
-      "y": 1180,
+      "x": 820,
+      "y": 1020,
       "premio": {
         "tipo": "oggetto",
         "id": "lumiball",
@@ -159,11 +159,134 @@
   "gara": {
     "id": "gara-arte",
     "x": 600,
-    "y": 1100
+    "y": 1120
   },
   "torneo": {
     "_nota": "Il Grande Torneo (F4): i 3 sfidanti (in qualsiasi ordine) sbloccano la finale col Maestro.",
-    "sfide": ["luminia-all1", "luminia-all2", "luminia-all3"],
+    "sfide": [
+      "luminia-all1",
+      "luminia-all2",
+      "luminia-all3"
+    ],
     "finale": "luminia-maestro"
-  }
+  },
+  "layout": {
+    "_nota": "Città del torneo: le case incorniciano l'arena, il Maestro sta al centro.",
+    "edifici": [
+      {
+        "x": 200,
+        "y": 300,
+        "w": 180,
+        "h": 130
+      },
+      {
+        "x": 1000,
+        "y": 300,
+        "w": 180,
+        "h": 140
+      },
+      {
+        "x": 200,
+        "y": 1120,
+        "w": 180,
+        "h": 140
+      },
+      {
+        "x": 1000,
+        "y": 1120,
+        "w": 180,
+        "h": 140
+      }
+    ],
+    "palestra": {
+      "x": 600,
+      "y": 240
+    },
+    "ombre": [
+      {
+        "x": 180,
+        "y": 760
+      },
+      {
+        "x": 1020,
+        "y": 760
+      },
+      {
+        "x": 440,
+        "y": 1180
+      },
+      {
+        "x": 760,
+        "y": 1180
+      },
+      {
+        "x": 880,
+        "y": 900
+      },
+      {
+        "x": 320,
+        "y": 900
+      }
+    ],
+    "tesori": [
+      {
+        "x": 160,
+        "y": 560
+      },
+      {
+        "x": 1040,
+        "y": 560
+      }
+    ],
+    "palloncini": [
+      {
+        "x": 600,
+        "y": 660
+      },
+      {
+        "x": 200,
+        "y": 480
+      },
+      {
+        "x": 1000,
+        "y": 480
+      },
+      {
+        "x": 600,
+        "y": 1240
+      }
+    ],
+    "cartelloPalloncini": {
+      "x": 760,
+      "y": 760
+    },
+    "civile": {
+      "x": 1050,
+      "y": 940
+    },
+    "rivale": {
+      "x": 150,
+      "y": 660
+    },
+    "cartelli": {
+      "uscita": {
+        "x": 800,
+        "y": 1250
+      },
+      "selvatici": {
+        "x": 150,
+        "y": 940
+      }
+    }
+  },
+  "luoghi": [
+    {
+      "id": "tabellone",
+      "tipo": "tabellone",
+      "x": 780,
+      "y": 540,
+      "titolo": "Il tabellone del Torneo",
+      "battuta": "Ecco chi hai già battuto."
+    }
+  ]
 }

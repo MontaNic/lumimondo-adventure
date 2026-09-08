@@ -26,13 +26,30 @@
       {
         "tipo": "dialogo",
         "battute": [
-          { "id": "terraverde:arrivo", "speaker": "narratore" },
-          { "id": "lauri:incontro", "speaker": "lauri" },
-          { "id": "doda:cura", "speaker": "lauri" }
+          {
+            "id": "terraverde:arrivo",
+            "speaker": "narratore"
+          },
+          {
+            "id": "lauri:incontro",
+            "speaker": "lauri"
+          },
+          {
+            "id": "doda:cura",
+            "speaker": "lauri"
+          }
         ]
       },
-      { "tipo": "unisci", "amico": "lauri" },
-      { "tipo": "conta", "n": 5, "tema": "fiori", "segna": "terraverde:intro" }
+      {
+        "tipo": "unisci",
+        "amico": "lauri"
+      },
+      {
+        "tipo": "conta",
+        "n": 5,
+        "tema": "fiori",
+        "segna": "terraverde:intro"
+      }
     ]
   },
   "npc": [
@@ -55,8 +72,8 @@
     {
       "id": "t-all1",
       "tipo": "allenatore",
-      "x": 860,
-      "y": 700,
+      "x": 880,
+      "y": 660,
       "nome": "Gio",
       "tex": "bimbo2",
       "voce": "allenatore:1",
@@ -77,8 +94,8 @@
     {
       "id": "t-all2",
       "tipo": "allenatore",
-      "x": 620,
-      "y": 700,
+      "x": 420,
+      "y": 760,
       "nome": "Nina",
       "tex": "bimba2",
       "voce": "allenatrice:2",
@@ -99,8 +116,8 @@
     {
       "id": "silvio",
       "tipo": "leader",
-      "x": 600,
-      "y": 330,
+      "x": 620,
+      "y": 370,
       "speaker": "silvio",
       "emoji": "🧑‍🌾",
       "colore": "#4caf50",
@@ -138,8 +155,8 @@
     {
       "id": "rovi",
       "tipo": "natura",
-      "x": 180,
-      "y": 1180,
+      "x": 160,
+      "y": 1240,
       "premio": {
         "tipo": "stelline",
         "n": 5
@@ -148,8 +165,8 @@
     {
       "id": "masso",
       "tipo": "roccia",
-      "x": 1040,
-      "y": 1180,
+      "x": 1060,
+      "y": 1240,
       "premio": {
         "tipo": "oggetto",
         "id": "trifoglio",
@@ -159,7 +176,135 @@
   ],
   "gara": {
     "id": "gara-bosco",
-    "x": 600,
-    "y": 1100
-  }
+    "x": 620,
+    "y": 1160
+  },
+  "layout": {
+    "_nota": "Radura nel bosco: case sparse ai quattro angoli, piazza aperta al centro.",
+    "edifici": [
+      {
+        "x": 200,
+        "y": 260,
+        "w": 180,
+        "h": 130
+      },
+      {
+        "x": 1000,
+        "y": 300,
+        "w": 180,
+        "h": 140
+      },
+      {
+        "x": 220,
+        "y": 940,
+        "w": 190,
+        "h": 150
+      },
+      {
+        "x": 1010,
+        "y": 1040,
+        "w": 180,
+        "h": 140
+      }
+    ],
+    "palestra": {
+      "x": 620,
+      "y": 250
+    },
+    "ombre": [
+      {
+        "x": 220,
+        "y": 600
+      },
+      {
+        "x": 700,
+        "y": 560
+      },
+      {
+        "x": 960,
+        "y": 820
+      },
+      {
+        "x": 560,
+        "y": 900
+      },
+      {
+        "x": 300,
+        "y": 1160
+      },
+      {
+        "x": 880,
+        "y": 1180
+      }
+    ],
+    "tesori": [
+      {
+        "x": 140,
+        "y": 760
+      },
+      {
+        "x": 1080,
+        "y": 660
+      }
+    ],
+    "palloncini": [
+      {
+        "x": 180,
+        "y": 420
+      },
+      {
+        "x": 1060,
+        "y": 500
+      },
+      {
+        "x": 700,
+        "y": 1060
+      },
+      {
+        "x": 440,
+        "y": 1180
+      }
+    ],
+    "cartelloPalloncini": {
+      "x": 600,
+      "y": 700
+    },
+    "civile": {
+      "x": 880,
+      "y": 880
+    },
+    "rivale": {
+      "x": 160,
+      "y": 1100
+    },
+    "cartelli": {
+      "uscita": {
+        "x": 760,
+        "y": 1250
+      },
+      "palestra": {
+        "x": 790,
+        "y": 330
+      },
+      "selvatici": {
+        "x": 140,
+        "y": 540
+      }
+    }
+  },
+  "luoghi": [
+    {
+      "id": "albero-doni",
+      "tipo": "regalo",
+      "x": 760,
+      "y": 880,
+      "titolo": "L'albero dei doni",
+      "battuta": "Il vecchio albero lascia cadere qualcosa per te.",
+      "premio": {
+        "tipo": "oggetto",
+        "id": "lumiball",
+        "n": 3
+      }
+    }
+  ]
 }
