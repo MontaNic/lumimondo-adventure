@@ -11,7 +11,10 @@
 
 import * as Stato from './state.js';
 
-const BASE_API = '/api/save/';
+// Percorso RELATIVO: su un hosting statico sotto sottocartella (GitHub Pages) un percorso
+// assoluto bussava alla radice del dominio, fuori dal sito. Senza server la chiamata fallisce
+// comunque in modo benigno (il gioco vive su localStorage), ma almeno non esce dal recinto.
+const BASE_API = 'api/save/';
 let inSync = false;
 let pushInSospeso = false;
 let timerPush = null;
