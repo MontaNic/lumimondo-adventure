@@ -193,7 +193,7 @@ setInterval(() => {
 }, 5000);
 
 // --- #4 Promemoria di PAUSA SALUTE ---------------------------------------
-// Ogni ~25 min di gioco ATTIVO (solo scene di gioco visibili, niente overlay/
+// Ogni 60 min (default, regolabile dal genitore) di gioco ATTIVO (solo scene di gioco visibili, niente overlay/
 // cinematiche, finestra in primo piano) un invito gentile a fare una pausa.
 // Override per test/genitori: window.LUMI_PAUSA_MS (durata) e LUMI_RIPOSO_SECONDI.
 window.LUMI.tempoGioco = 0;
@@ -217,7 +217,7 @@ setInterval(() => {
   const imp = (window.GS && window.GS.impostazioni) || {};
   if (imp.pausaSalute === false || window.LUMI.pausaBypass) { window.LUMI.tempoGioco = 0; return; }
   window.LUMI.tempoGioco += 1000;
-  const minuti = (typeof imp.pausaSaluteMin === 'number' && imp.pausaSaluteMin >= 5) ? imp.pausaSaluteMin : 45;
+  const minuti = (typeof imp.pausaSaluteMin === 'number' && imp.pausaSaluteMin >= 5) ? imp.pausaSaluteMin : 60;   // default 1 ora (prima 45 min)
   const soglia = (window.LUMI_PAUSA_MS | 0) || (minuti * 60 * 1000);
   // Scatta SOLO su mappa o città (mai a metà battaglia/dialogo/quiz, che non sono in
   // _SCENE_GIOCO "in cima" o sono battaglia): il tempo conta lo stesso, ma il promemoria
