@@ -23,6 +23,7 @@ import { AperturaScene } from './scenes/AperturaScene.js';
 import { DiarioScene } from './scenes/DiarioScene.js';
 import { NegozioScene } from './scenes/NegozioScene.js';
 import { TutorialScene } from './scenes/TutorialScene.js';
+import { GenitoriScene } from './scenes/GenitoriScene.js';
 import { salvaGS } from '../gs.js';
 import { pushBeacon } from '../sync.js';
 import { GAME_VERSION } from '../version.js';
@@ -47,7 +48,7 @@ const config = {
   // (nessun bordo geometrico da smussare). powerPreference chiede la GPU più veloce.
   // Stesso aspetto, meno carico per-frame.
   render: { antialias: true, antialiasGL: false, pixelArt: false, powerPreference: 'high-performance' },
-  scene: [BootScene, PreloadScene, AperturaScene, ProfiloScene, MenuScene, PlaygroundScene, MappaMondoScene, CittaScene, DialogoScene, BattagliaScene, AlbumScene, EvoluzioneScene, PausaScene, RiposoScene, SquadraScene, CoccoleScene, GaraScene, QuizScene, StarterScene, DiarioScene, NegozioScene, TutorialScene],
+  scene: [BootScene, PreloadScene, AperturaScene, ProfiloScene, MenuScene, PlaygroundScene, MappaMondoScene, CittaScene, DialogoScene, BattagliaScene, AlbumScene, EvoluzioneScene, PausaScene, RiposoScene, SquadraScene, CoccoleScene, GaraScene, QuizScene, StarterScene, DiarioScene, NegozioScene, TutorialScene, GenitoriScene],
 };
 
 // --- Reset di sviluppo/test ------------------------------------------------
@@ -295,7 +296,7 @@ const _SCENE_GIOCO = ['MappaMondoScene', 'CittaScene', 'BattagliaScene'];
 // in un gioco pieno di dialoghi 45 min d'orologio valevano molto meno di 45 min "contati"
 // e la pausa non scattava quasi mai ("ho giocato 45 min e niente pausa"). Ora conta tutto
 // il tempo a schermo; il promemoria però compare solo in un momento SICURO (mappa/città).
-const _FUORI_GIOCO = ['BootScene', 'PreloadScene', 'MenuScene', 'ProfiloScene', 'AperturaScene', 'RiposoScene'];
+const _FUORI_GIOCO = ['BootScene', 'PreloadScene', 'MenuScene', 'ProfiloScene', 'AperturaScene', 'RiposoScene', 'GenitoriScene'];
 setInterval(() => {
   if (!window.gioco || document.hidden) return;
   const sm = window.gioco.scene; if (!sm) return;
