@@ -9,7 +9,7 @@
  *
  * Bump CACHE_VERSION a ogni release (allineato a version.js → GAME_VERSION). */
 
-const CACHE_VERSION = 'lumimondo-adv-phaser-P1.22.7';
+const CACHE_VERSION = 'lumimondo-adv-phaser-P1.22.8';
 // 'dev' = network-first (anti-cache-stantia durante lo sviluppo/test di Pietro).
 // Dopo il test di Pietro e l'OK finale, passare a 'prod' (cache-first aggressiva).
 const MODALITA = 'dev';

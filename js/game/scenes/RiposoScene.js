@@ -23,45 +23,54 @@ export class RiposoScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('rgba(8,16,12,0.82)');
 
     // Pannello morbido.
-    const pw = Math.min(380, width * 0.9), ph = Math.min(440, height * 0.86), top = cy - ph / 2;
+    // Schermo basso (telefono in orizzontale): il pannello da 440px non ci stava e
+    // "Riposa ancora…" finiva sopra i consigli. Qui 2 colonne: Pepole a sinistra,
+    // testi e pulsante a destra.
+    const corto = height < 520;
+    const pw = corto ? Math.min(620, width * 0.92) : Math.min(380, width * 0.9);
+    const ph = corto ? height * 0.9 : Math.min(440, height * 0.86), top = cy - ph / 2;
+    const tx = corto ? cx + pw * 0.14 : cx;                 // colonna dei testi
+    const Y = corto
+      ? { titolo: 32, pep: ph * 0.55, msg: 92, tips: 140, passo: 25 }
+      : { titolo: 40, pep: 130, msg: 214, tips: 252, passo: 26 };
     const g = this.add.graphics();
     g.fillStyle(0x000000, 0.25); g.fillRoundedRect(cx - pw / 2 + 4, top + 8, pw, ph, 22);
     g.fillStyle(0x14241a, 0.98); g.fillRoundedRect(cx - pw / 2, top, pw, ph, 22);
     g.lineStyle(4, 0x9ed46a, 1); g.strokeRoundedRect(cx - pw / 2, top, pw, ph, 22);
 
-    this.add.text(cx, top + 40, '🌿 Pausa Lumimondo!', {
+    this.add.text(cx, top + Y.titolo, '🌿 Pausa Lumimondo!', {
       fontFamily: 'system-ui, sans-serif', fontSize: '24px', color: '#bdf0a0', fontStyle: 'bold',
       stroke: '#1c4a22', strokeThickness: 5, align: 'center', wordWrap: { width: pw - 30 },
     }).setOrigin(0.5);
 
     // Pepole che sonnecchia (dà l'esempio).
-    const pep = new Pepole(this, cx, top + 130, { scala: 1.2 });
+    const pep = new Pepole(this, corto ? cx - pw * 0.3 : cx, top + Y.pep, { scala: 1.2 });
     if (pep.setEspressione) pep.setEspressione('dorme');
     this.tweens.add({ targets: pep, y: pep.y + 8, yoyo: true, repeat: -1, duration: 1400, ease: 'Sine.inOut' });
-    const z = this.add.text(cx + 34, top + 96, '💤', { fontSize: '22px' }).setOrigin(0.5);
+    const z = this.add.text(pep.x + 34, top + Y.pep - 34, '💤', { fontSize: '22px' }).setOrigin(0.5);
     this.tweens.add({ targets: z, y: z.y - 18, alpha: 0.3, yoyo: true, repeat: -1, duration: 1400 });
 
-    this.add.text(cx, top + 214, 'Hai giocato un bel po\'!\nFacciamo riposare gli occhi 👀', {
+    this.add.text(tx, top + Y.msg, 'Hai giocato un bel po\'!\nFacciamo riposare gli occhi 👀', {
       fontFamily: 'system-ui, sans-serif', fontSize: '17px', color: '#ffffff', align: 'center',
-      lineSpacing: 4, wordWrap: { width: pw - 40 },
+      lineSpacing: 4, wordWrap: { width: corto ? pw * 0.62 : pw - 40 },
     }).setOrigin(0.5);
 
     // Tre suggerimenti gentili.
     const tips = ['🤸  Sgranchisci le gambe', '💧  Bevi un po\' d\'acqua', '🌳  Guarda lontano dalla finestra'];
-    tips.forEach((t, i) => this.add.text(cx, top + 252 + i * 26, t, {
+    tips.forEach((t, i) => this.add.text(tx, top + Y.tips + i * Y.passo, t, {
       fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#cfeebb',
     }).setOrigin(0.5));
 
     // Micro-riposo guidato: conto alla rovescia dolce, poi il pulsante Riprendi.
     const SEC = Math.max(3, (window.LUMI_RIPOSO_SECONDI | 0) || 20);
-    const conto = this.add.text(cx, top + ph - 64, '', {
+    const conto = this.add.text(tx, top + ph - (corto ? 52 : 64), '', {
       fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#9ed46a', fontStyle: 'bold',
     }).setOrigin(0.5);
     let rimasti = SEC;
     const tic = () => {
       rimasti--;
       if (rimasti > 0) { conto.setText(`Riposa ancora… ${rimasti}`); }
-      else { conto.destroy(); this._mostraRiprendi(cx, top + ph - 56, pw); }
+      else { conto.destroy(); this._mostraRiprendi(tx, top + ph - (corto ? 48 : 56), corto ? pw * 0.6 : pw); }
     };
     conto.setText(`Riposa ancora… ${rimasti}`);
     this.time.addEvent({ delay: 1000, repeat: SEC - 1, callback: tic });
@@ -69,7 +78,7 @@ export class RiposoScene extends Phaser.Scene {
 
     // Bypass GENITORI: piccolo link in basso. Con la password dell'Area Genitori (o di
     // /admin, se c'è un server) un adulto può saltare la pausa per questa sessione.
-    if (bypassDisponibile()) this._bottoneGenitori(cx, top + ph - 16);
+    if (bypassDisponibile()) this._bottoneGenitori(corto ? cx - pw * 0.3 : cx, top + ph - 16);
   }
 
   _bottoneGenitori(x, y) {
