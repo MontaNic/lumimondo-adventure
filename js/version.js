@@ -4,4 +4,4 @@
  * Incrementa GAME_VERSION a ogni commit che tocca il frontend Phaser.
  * Mostrata in piccolo nel menu pausa e usata per il cache-busting del SW.
  */
-export const GAME_VERSION = 'P1.22.8';
+export const GAME_VERSION = 'P1.22.9';
