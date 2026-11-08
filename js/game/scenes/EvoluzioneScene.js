@@ -61,8 +61,11 @@ export class EvoluzioneScene extends Phaser.Scene {
     const cx = width / 2, cy = height * 0.42;
 
     // Pietro e Pepole in basso (esultano alla fine).
-    this.pietro = new Pietro(this, cx - 40, height * 0.82);
-    this.pepole = new Pepole(this, cx + 30, height * 0.82, { scala: 0.8 });
+    // Schermo basso (telefono in orizzontale): Pietro e Pepole ai lati, altrimenti la
+    // scritta "… si è evoluto in …!" passava sopra Pietro.
+    const corto = height < 520;
+    this.pietro = new Pietro(this, corto ? width * 0.14 : cx - 40, height * 0.82);
+    this.pepole = new Pepole(this, corto ? width * 0.86 : cx + 30, height * 0.82, { scala: 0.8 });
 
     // Lumino di partenza.
     this.lumDa = new Lumino(this, cx, cy, this.da).setScale(1.1);

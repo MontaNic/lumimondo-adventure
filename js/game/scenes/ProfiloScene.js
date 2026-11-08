@@ -21,8 +21,15 @@ export class ProfiloScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#1a2236');
     // Sfondo morbido + titolo.
     this.add.rectangle(W / 2, H / 2, W, H, 0x223052).setAlpha(0.0);
-    this.add.text(W / 2, H * 0.12, 'Lumimondo', { fontFamily: 'system-ui, sans-serif', fontSize: '40px', color: '#ffd23f', fontStyle: 'bold', stroke: '#3a2c22', strokeThickness: 6 }).setOrigin(0.5);
-    this.add.text(W / 2, H * 0.18, 'Adventure', { fontFamily: 'system-ui, sans-serif', fontSize: '24px', color: '#7ad0ff', fontStyle: 'bold' }).setOrigin(0.5);
+    // Schermo BASSO (telefono in orizzontale): con le posizioni in % dell'altezza titolo,
+    // domande e pulsanti si sovrapponevano. Qui misure compatte calcolate (vedi _L).
+    this._corto = H < 520;
+    if (this._corto) {
+      this.add.text(W / 2, 24, 'Lumimondo', { fontFamily: 'system-ui, sans-serif', fontSize: '28px', color: '#ffd23f', fontStyle: 'bold', stroke: '#3a2c22', strokeThickness: 5 }).setOrigin(0.5);
+    } else {
+      this.add.text(W / 2, H * 0.12, 'Lumimondo', { fontFamily: 'system-ui, sans-serif', fontSize: '40px', color: '#ffd23f', fontStyle: 'bold', stroke: '#3a2c22', strokeThickness: 6 }).setOrigin(0.5);
+      this.add.text(W / 2, H * 0.18, 'Adventure', { fontFamily: 'system-ui, sans-serif', fontSize: '24px', color: '#7ad0ff', fontStyle: 'bold' }).setOrigin(0.5);
+    }
 
     this._eta = ETA_DEF;
     this._defaults = {};   // default per i nuovi profili (dal superadmin)
@@ -114,18 +121,42 @@ export class ProfiloScene extends Phaser.Scene {
     this._clear();
     this._modo = 'selezione';
     const W = this.W, H = this.H;
-    this._layer.add(this.add.text(W / 2, H * 0.28, 'Chi sta giocando?', { fontFamily: 'system-ui, sans-serif', fontSize: '22px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
+    const corto = this._corto;
+    this._layer.add(this.add.text(W / 2, corto ? 58 : H * 0.28, 'Chi sta giocando?', { fontFamily: 'system-ui, sans-serif', fontSize: corto ? '19px' : '22px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
     const ord = [...profili].sort((a, b) => (b.usato || b.creato || 0) - (a.usato || a.creato || 0));
-    const cw = Math.min(360, W * 0.8), ch = 56, gap = 12;
-    let y = H * 0.36;
+    const cw = Math.min(360, W * 0.8), gap = corto ? 8 : 12;
+    // Su schermo basso le card si adattano allo spazio tra la domanda e i pulsanti in fondo.
+    const nCard = Math.min(4, ord.length);
+    const ch = corto ? Math.max(38, Math.min(50, (H - 96 - 64 - (nCard - 1) * gap) / Math.max(1, nCard))) : 56;
+    let y = corto ? 82 + ch / 2 : H * 0.36;
     ord.slice(0, 4).forEach((p) => {
       // Data (creazione) sotto il nome: distingue gli OMONIMI a colpo d'occhio.
       const data = p.creato ? 'creato ' + new Date(p.creato).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: '2-digit' }) : '';
       this._cardProfilo(W / 2, y, cw, ch, `${p.nome}  ·  ${p.eta} anni`, 0x2c7a33, () => this._entra(p, false), data);
       y += ch + gap;
     });
+    if (corto) {
+      // I due pulsanti affiancati in fondo.
+      const bw = Math.min(260, (W - 48) / 2), by = H - 30;
+      this._bottone(W / 2 - bw / 2 - 6, by, bw, 44, '➕  Nuovo profilo', 0x3a6ea5, () => this._mostraCreazione());
+      this._bottone(W / 2 + bw / 2 + 6, by, bw, 44, '📥  Ripristina', 0x55555f, () => this._ripristina());
+      return;
+    }
     this._bottone(W / 2, y + 8, cw, 50, '➕  Nuovo profilo', 0x3a6ea5, () => this._mostraCreazione());
     this._bottone(W / 2, y + 66, cw, 44, '📥  Ripristina da backup', 0x55555f, () => this._ripristina());
+  }
+
+  /** Posizioni della schermata "nuovo profilo". Schermo alto: come prima (in % di H).
+   *  Schermo basso: colonna compatta in pixel, con i pulsanti finali affiancati. */
+  _L() {
+    const H = this.H, W = this.W, n = ETA_MAX - ETA_MIN + 1;
+    if (!this._corto) {
+      return { nomeY: Math.max(H * 0.21, H * 0.18 + 36), inputY: Math.max(H * 0.29, H * 0.18 + 88), etaLY: H * 0.40, etaY: H * 0.47, genLY: H * 0.575, genY: H * 0.65,
+        genH: 48, fL: 22, fL2: 20, bw: Math.min(56, (W - 60) / n - 8), affiancati: false };
+    }
+    const k = Math.min(1.25, H / 372);   // un po' d'aria in più se lo schermo lo consente
+    return { nomeY: 58 * k, inputY: 94 * k, etaLY: 136 * k, etaY: 172 * k, genLY: 212 * k, genY: 248 * k,
+      genH: 40, fL: 18, fL2: 17, bw: Math.min(42, (W - 60) / n - 8), affiancati: true };
   }
 
   _cardProfilo(cx, cy, w, h, testo, colore, cb, sub) {
@@ -148,14 +179,15 @@ export class ProfiloScene extends Phaser.Scene {
     this._clear();
     this._modo = 'creazione';
     const W = this.W, H = this.H;
-    this._layer.add(this.add.text(W / 2, H * 0.21, 'Come ti chiami?', { fontFamily: 'system-ui, sans-serif', fontSize: '22px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
-    this._creaInput(H * 0.29);
+    const L = this._L();
+    this._layer.add(this.add.text(W / 2, L.nomeY, 'Come ti chiami?', { fontFamily: 'system-ui, sans-serif', fontSize: L.fL + 'px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
+    this._creaInput(L.inputY);
 
-    this._layer.add(this.add.text(W / 2, H * 0.40, 'Quanti anni hai?', { fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
+    this._layer.add(this.add.text(W / 2, L.etaLY, 'Quanti anni hai?', { fontFamily: 'system-ui, sans-serif', fontSize: L.fL2 + 'px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
     // Pulsanti età.
     this._etaBtn = {};
     const n = ETA_MAX - ETA_MIN + 1;
-    const bw = Math.min(56, (W - 60) / n - 8), by = H * 0.47;
+    const bw = L.bw, by = L.etaY;
     for (let i = 0; i < n; i++) {
       const eta = ETA_MIN + i;
       const x = W / 2 + (i - (n - 1) / 2) * (bw + 8);
@@ -170,18 +202,27 @@ export class ProfiloScene extends Phaser.Scene {
 
     // Genere (sprite del personaggio). Default maschio.
     this._genere = this._genere || 'maschio';
-    this._layer.add(this.add.text(W / 2, H * 0.575, 'Sei un bimbo o una bimba?', { fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
+    this._layer.add(this.add.text(W / 2, L.genLY, 'Sei un bimbo o una bimba?', { fontFamily: 'system-ui, sans-serif', fontSize: L.fL2 + 'px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
     this._genBtn = {};
-    const gw = Math.min(150, W * 0.4), gy = H * 0.65;
+    const gw = Math.min(150, W * 0.4), gy = L.genY;
     [['maschio', '👦 Bimbo', -1], ['femmina', '👧 Bimba', 1]].forEach(([g, lab, dir]) => {
       const x = W / 2 + dir * (gw / 2 + 8);
       const gfx = this.add.graphics();
-      this._disegnaGenere(gfx, x, gy, gw, this._genere === g);
+      this._disegnaGenere(gfx, x, gy, gw, this._genere === g, L.genH);
       const t = this.add.text(x, gy, lab, { fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5);
       this._layer.add([gfx, t]);
       this._genBtn[g] = gfx;
-      this._hit(x, gy, gw, 48, () => this._scegliGenere(g), []);
+      this._hit(x, gy, gw, L.genH, () => this._scegliGenere(g), []);
     });
+
+    if (L.affiancati) {
+      // Schermo basso: "Inizia!" e Ripristina/Indietro affiancati in fondo.
+      const bw2 = Math.min(240, (W - 48) / 2), yb = this.H - 30;
+      this._bottone(W / 2 - bw2 / 2 - 6, yb, bw2, 46, 'Inizia!  ▶', 0x2c7a33, () => this._confermaCreazione());
+      if (!listaProfili().length) this._bottone(W / 2 + bw2 / 2 + 6, yb, bw2, 46, '📥  Ripristina', 0x55555f, () => this._ripristina());
+      else this._bottone(W / 2 + bw2 / 2 + 6, yb, bw2, 46, '‹ Indietro', 0x55555f, () => this._mostraSelezione(listaProfili()));
+      return;
+    }
 
     this._bottone(W / 2, H * 0.79, Math.min(280, W * 0.7), 56, 'Inizia!  ▶', 0x2c7a33, () => this._confermaCreazione());
     // Dispositivo nuovo (nessun profilo): questa è l'UNICA schermata visibile, quindi il
@@ -192,18 +233,19 @@ export class ProfiloScene extends Phaser.Scene {
     }
   }
 
-  _disegnaGenere(g, x, y, w, sel) {
+  _disegnaGenere(g, x, y, w, sel, h = 48) {
     g.clear();
-    g.fillStyle(sel ? 0xffd23f : 0x3a4a66, 1); g.fillRoundedRect(x - w / 2, y - 24, w, 48, 12);
-    g.lineStyle(3, sel ? 0x8a6a1e : 0x223052, 1); g.strokeRoundedRect(x - w / 2, y - 24, w, 48, 12);
+    g.fillStyle(sel ? 0xffd23f : 0x3a4a66, 1); g.fillRoundedRect(x - w / 2, y - h / 2, w, h, 12);
+    g.lineStyle(3, sel ? 0x8a6a1e : 0x223052, 1); g.strokeRoundedRect(x - w / 2, y - h / 2, w, h, 12);
   }
 
   _scegliGenere(g) {
     this._genere = g; audio.suono && audio.suono('tocco');
-    const gw = Math.min(150, this.W * 0.4), gy = this.H * 0.65;
+    const L = this._L();
+    const gw = Math.min(150, this.W * 0.4), gy = L.genY;
     [['maschio', -1], ['femmina', 1]].forEach(([k, dir]) => {
       const x = this.W / 2 + dir * (gw / 2 + 8);
-      if (this._genBtn[k]) this._disegnaGenere(this._genBtn[k], x, gy, gw, k === this._genere);
+      if (this._genBtn[k]) this._disegnaGenere(this._genBtn[k], x, gy, gw, k === this._genere, L.genH);
     });
   }
 
@@ -215,7 +257,8 @@ export class ProfiloScene extends Phaser.Scene {
 
   _scegliEta(eta) {
     this._eta = eta; audio.suono && audio.suono('tocco');
-    const n = ETA_MAX - ETA_MIN + 1, bw = Math.min(56, (this.W - 60) / n - 8), by = this.H * 0.47;
+    const L = this._L();
+    const n = ETA_MAX - ETA_MIN + 1, bw = L.bw, by = L.etaY;
     for (let i = 0; i < n; i++) {
       const e = ETA_MIN + i, x = this.W / 2 + (i - (n - 1) / 2) * (bw + 8);
       if (this._etaBtn[e]) this._disegnaEta(this._etaBtn[e], x, by, bw, e === this._eta);
@@ -235,7 +278,7 @@ export class ProfiloScene extends Phaser.Scene {
     const inp = document.createElement('input');
     inp.type = 'text'; inp.maxLength = 16; inp.placeholder = 'Il tuo nome';
     inp.setAttribute('autocomplete', 'off'); inp.setAttribute('autocapitalize', 'words'); inp.spellcheck = false;
-    inp.style.cssText = 'position:fixed;transform:translate(-50%,-50%);width:min(70vw,300px);font-size:22px;text-align:center;padding:12px 14px;border:3px solid #ffd23f;border-radius:14px;background:#fff;color:#3a2c22;font-family:system-ui,sans-serif;z-index:99999;outline:none;box-shadow:0 4px 12px rgba(0,0,0,.3)';
+    inp.style.cssText = `position:fixed;transform:translate(-50%,-50%);width:min(70vw,300px);font-size:${this._corto ? 18 : 22}px;text-align:center;padding:${this._corto ? '7px 12px' : '12px 14px'};border:3px solid #ffd23f;border-radius:14px;background:#fff;color:#3a2c22;font-family:system-ui,sans-serif;z-index:99999;outline:none;box-shadow:0 4px 12px rgba(0,0,0,.3)`;
     document.body.appendChild(inp);
     this._inputEl = inp; this._inputY = localY;
     this._posizionaInput();

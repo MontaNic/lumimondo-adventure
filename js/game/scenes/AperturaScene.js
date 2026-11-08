@@ -32,9 +32,11 @@ export class AperturaScene extends Phaser.Scene {
     Juice.particelleAmbiente(this, { n: 12, colore: 0xfff0b8, depth: -80 });
 
     // --- Logo: stella che entra ruotando + titolo (stile MenuScene) ---
-    const logo = this.add.container(W / 2, H * 0.22).setDepth(10);
+    // Su schermo basso la stella toccava il titolo: più piccola e più in alto.
+    const rStella = H < 520 ? 32 : 44;
+    const logo = this.add.container(W / 2, Math.min(H * 0.22, H * 0.33 - 30 - rStella)).setDepth(10);
     const g = this.add.graphics();
-    this._stella(g, 0, 0, 44, 0xffd23f, 0x8a4b1e);
+    this._stella(g, 0, 0, rStella, 0xffd23f, 0x8a4b1e);
     logo.add(g);
     logo.setScale(0).setAngle(-180);
     this.tweens.add({ targets: logo, scale: 1, angle: 0, duration: 700, ease: 'Back.out' });
