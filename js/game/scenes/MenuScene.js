@@ -19,31 +19,38 @@ export class MenuScene extends Phaser.Scene {
     this.cameras.main.setZoom(1.04);
     this.tweens.add({ targets: this.cameras.main, zoom: 1, yoyo: true, repeat: -1, duration: 4200, ease: 'Sine.inOut' });
 
+    // Schermo BASSO (telefono in orizzontale, ~370px): con le proporzioni del tablet
+    // "Come si gioca" finiva sopra "Gioca!". Qui un impianto compatto: tutto più
+    // piccolo e i due pulsanti secondari affiancati.
+    const corto = height < 520;
+    const Y = corto
+      ? { logo: 0.15, r: 32, t1: 0.33, f1: 38, t2: 0.42, f2: 20, gioca: 0.59, bh: 56, help: 0.80, due: 0.80, campione: 0.70 }
+      : { logo: 0.32, r: 46, t1: 0.46, f1: 46, t2: 0.53, f2: 24, gioca: 0.68, bh: 70, help: 0.79, due: 0.86, campione: 0.60 };
     // Stella logo (in un container così la posso animare: rotazione lenta + bob).
-    const logo = this.add.container(width / 2, height * 0.32);
+    const logo = this.add.container(width / 2, height * Y.logo);
     const g = this.add.graphics();
-    this._stella(g, 0, 0, 46, 0xffd23f, 0x8a4b1e);
+    this._stella(g, 0, 0, Y.r, 0xffd23f, 0x8a4b1e);
     logo.add(g);
     this.tweens.add({ targets: logo, angle: 8, yoyo: true, repeat: -1, duration: 2600, ease: 'Sine.inOut' });
     this.tweens.add({ targets: logo, y: logo.y - 10, yoyo: true, repeat: -1, duration: 1600, ease: 'Sine.inOut' });
     Juice.entrata(this, logo, { da: 0.2, dur: 600 });
 
-    const t1 = this.add.text(width / 2, height * 0.46, 'Lumimondo', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '46px', color: '#ffffff',
+    const t1 = this.add.text(width / 2, height * Y.t1, 'Lumimondo', {
+      fontFamily: 'system-ui, sans-serif', fontSize: Y.f1 + 'px', color: '#ffffff',
       fontStyle: 'bold', stroke: '#8a4b1e', strokeThickness: 7,
     }).setOrigin(0.5);
-    const t2 = this.add.text(width / 2, height * 0.53, 'Adventure', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '24px', color: '#fff3d6',
+    const t2 = this.add.text(width / 2, height * Y.t2, 'Adventure', {
+      fontFamily: 'system-ui, sans-serif', fontSize: Y.f2 + 'px', color: '#fff3d6',
       fontStyle: 'bold', stroke: '#8a4b1e', strokeThickness: 4,
     }).setOrigin(0.5);
     Juice.entrata(this, t1, { da: 0.6, dur: 420, delay: 150 });
     Juice.entrata(this, t2, { da: 0.6, dur: 420, delay: 260 });
 
     // Pulsante Gioca (≥60px alto, touch-friendly).
-    const bw = Math.min(260, width * 0.7), bh = 70;
-    const bg = this.add.rectangle(width / 2, height * 0.68, bw, bh, 0x2c7a33)
+    const bw = Math.min(260, width * 0.7), bh = Y.bh;
+    const bg = this.add.rectangle(width / 2, height * Y.gioca, bw, bh, 0x2c7a33)
       .setStrokeStyle(4, 0x16451c).setInteractive({ useHandCursor: true });
-    this.add.text(width / 2, height * 0.68, 'Gioca!  ▶', {
+    this.add.text(width / 2, height * Y.gioca, 'Gioca!  ▶', {
       fontFamily: 'system-ui, sans-serif', fontSize: '28px', color: '#ffffff', fontStyle: 'bold',
     }).setOrigin(0.5);
     this.tweens.add({ targets: bg, scaleX: 1.04, scaleY: 1.04, yoyo: true, repeat: -1, duration: 700 });
@@ -68,12 +75,12 @@ export class MenuScene extends Phaser.Scene {
     // #65 — Badge "Campione" + entrata 2 giocatori, sbloccati a gioco finito.
     const fatto = !!(window.GS && window.GS.progressiStoria && window.GS.progressiStoria['luminia:fatta']) || !!(window.GS && window.GS.campione);
     if (fatto) {
-      this.add.text(width / 2, height * 0.60, '🌟 Modalità Campione attiva! 🌟', {
+      this.add.text(width / 2, height * Y.campione, '🌟 Modalità Campione attiva! 🌟', {
         fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#fff3d6', fontStyle: 'bold', stroke: '#8a4b1e', strokeThickness: 3,
       }).setOrigin(0.5);
     }
     // #66 — 2 Giocatori (stesso iPad): sempre disponibile per i fratelli.
-    const due = this.add.text(width / 2, height * 0.86, '👥 2 Giocatori', {
+    const due = this.add.text(corto ? width / 2 + 90 : width / 2, height * Y.due, '👥 2 Giocatori', {
       fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: '#fff', fontStyle: 'bold',
       backgroundColor: '#3a6ea5cc', padding: { x: 12, y: 7 },
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
@@ -88,7 +95,7 @@ export class MenuScene extends Phaser.Scene {
     });
 
     // #75 — Tutorial richiamabile: "Come si gioca".
-    const help = this.add.text(width / 2, height * 0.79, '❓ Come si gioca', {
+    const help = this.add.text(corto ? width / 2 - 90 : width / 2, height * Y.help, '❓ Come si gioca', {
       fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: '#fff', fontStyle: 'bold',
       backgroundColor: '#00000044', padding: { x: 12, y: 7 },
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });

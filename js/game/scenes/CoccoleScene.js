@@ -57,12 +57,27 @@ export class CoccoleScene extends Phaser.Scene {
     const y0 = top + Math.max(0, (avail - totale) / 2);
     const lumCy = y0 + TESTA + SOPRA * ls;
     const sotto = lumCy + SOTTO * ls;
+    const W = this.W;
     this.LY = {
       short, btnH, exitY, btnY, selY, lumCy, lumScale: ls,
       facciaY: y0 + (short ? 20 : 26), hintY: y0 + (short ? 48 : 70),
       nameY: sotto + 10, heartsY: sotto + 30,
       barY: sotto + 47, sazY: sotto + 60,
+      xFaccia: W / 2, xInfo: W / 2, hintW: W - 60,
     };
+    // Telefono in ORIZZONTALE: in colonna non ci sta (la riga "Legame" finiva sotto
+    // i pulsanti). Disposizione a 3 colonne: fumetto a sinistra, Lumino al centro,
+    // nome/cuori/legame a destra → il Lumino può anche essere più grande.
+    if (short && W >= 560) {
+      const lsL = clamp((avail - 8) / (SOPRA + SOTTO), 0.45, 1.1);
+      const cy = top + (avail - (SOPRA + SOTTO) * lsL) / 2 + SOPRA * lsL;
+      const mid = top + avail / 2;
+      Object.assign(this.LY, {
+        lumCy: cy, lumScale: lsL,
+        xFaccia: W * 0.2, facciaY: mid - 22, hintY: mid + 26, hintW: W * 0.3,
+        xInfo: W * 0.8, nameY: mid - 34, heartsY: mid - 10, barY: mid + 12, sazY: mid + 30,
+      });
+    }
   }
 
   create() {
@@ -105,23 +120,23 @@ export class CoccoleScene extends Phaser.Scene {
   // Faccia grande dell'emozione + bolla del "come si sente" (segnale chiaro per il bimbo).
   _emozioneWidget() {
     const W = this.W, LY = this.LY;
-    this._faccia = this.add.text(W / 2, LY.facciaY, '', { fontSize: LY.short ? '40px' : '50px' }).setOrigin(0.5);
-    this._emote = this.add.text(W / 2 + 36, LY.facciaY - 18, '', { fontSize: '24px' }).setOrigin(0.5);
-    this._comeSi = this.add.text(W / 2, LY.hintY, '', {
+    this._faccia = this.add.text(LY.xFaccia, LY.facciaY, '', { fontSize: LY.short ? '40px' : '50px' }).setOrigin(0.5);
+    this._emote = this.add.text(LY.xFaccia + 36, LY.facciaY - 18, '', { fontSize: '24px' }).setOrigin(0.5);
+    this._comeSi = this.add.text(LY.xFaccia, LY.hintY, '', {
       fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#3a2c22', fontStyle: 'bold',
-      backgroundColor: '#ffffffee', padding: { x: 10, y: 3 }, align: 'center', wordWrap: { width: W - 60 },
+      backgroundColor: '#ffffffee', padding: { x: 10, y: 3 }, align: 'center', wordWrap: { width: LY.hintW },
     }).setOrigin(0.5).setDepth(20);
     this._faccia.setDepth(20); this._emote.setDepth(20);
   }
 
   _legamePersistente() {
     const W = this.W, LY = this.LY;
-    this._cuoriTxt = this.add.text(W / 2, LY.heartsY, '', { fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#ff7da6', fontStyle: 'bold' }).setOrigin(0.5);
+    this._cuoriTxt = this.add.text(LY.xInfo, LY.heartsY, '', { fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#ff7da6', fontStyle: 'bold' }).setOrigin(0.5);
     const bw = 180;
-    this._barW = bw; this._barX = W / 2 - bw / 2;
-    this.add.rectangle(W / 2, LY.barY, bw, 9, 0x000000, 0.4).setStrokeStyle(1, 0x7a6a9a);
+    this._barW = bw; this._barX = LY.xInfo - bw / 2;
+    this.add.rectangle(LY.xInfo, LY.barY, bw, 9, 0x000000, 0.4).setStrokeStyle(1, 0x7a6a9a);
     this._barraFill = this.add.rectangle(this._barX, LY.barY, 2, 7, 0x57c15a).setOrigin(0, 0.5).setVisible(false);
-    this._sazTxt = this.add.text(W / 2, LY.sazY, '', { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#ffd7ec', fontStyle: 'bold' }).setOrigin(0.5);
+    this._sazTxt = this.add.text(LY.xInfo, LY.sazY, '', { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#ffd7ec', fontStyle: 'bold' }).setOrigin(0.5);
   }
 
   _nuovaEmozione() {
@@ -182,7 +197,7 @@ export class CoccoleScene extends Phaser.Scene {
     try { this.lum.setEspressione('felice'); } catch { /* */ }
     this._pan.add(this.lum);
     this.tweens.add({ targets: this.lum, y: cy - 6, yoyo: true, repeat: -1, duration: 1200, ease: 'Sine.inOut' });
-    this._pan.add(this.add.text(cx, LY.nameY, l.nome || base.nome || l.specie, {
+    this._pan.add(this.add.text(LY.xInfo, LY.nameY, l.nome || base.nome || l.specie, {
       fontFamily: 'system-ui, sans-serif', fontSize: '17px', color: '#fff', fontStyle: 'bold', stroke: '#3a2c22', strokeThickness: 4,
     }).setOrigin(0.5));
     this._aggiornaLegame();

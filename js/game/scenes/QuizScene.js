@@ -44,7 +44,11 @@ export class QuizScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('rgba(20,14,30,0.62)');
 
     // --- Pannello pergamena -------------------------------------------------
-    const pw = Math.min(460, W * 0.94), ph = Math.min(600, H * 0.9);
+    // Schermo BASSO (telefono in orizzontale): il pannello si allarga invece di
+    // restare stretto e schiacciato → icone in una riga e pulsanti che ci stanno.
+    this._corto = H < 520;
+    const pw = this._corto ? Math.min(640, W * 0.9) : Math.min(460, W * 0.94);
+    const ph = this._corto ? H * 0.94 : Math.min(600, H * 0.9);
     this._pw = pw; this._ph = ph;
     this._top = this.py - ph / 2;
     const L = this.px - pw / 2, T = this._top;
@@ -55,7 +59,7 @@ export class QuizScene extends Phaser.Scene {
     g.lineStyle(3, 0xe8d3a8, 1); g.strokeRoundedRect(L + 6, T + 6, pw - 12, ph - 12, 20);
 
     // --- Festone intestazione ----------------------------------------------
-    const bw = pw * 0.7, bh = 46, by = T + 22;
+    const bw = pw * 0.7, bh = this._corto ? 36 : 46, by = T + (this._corto ? 12 : 22);
     g.fillStyle(0xff8a3c, 1); g.fillRoundedRect(this.px - bw / 2, by, bw, bh, 14);
     g.lineStyle(3, BORDO, 1); g.strokeRoundedRect(this.px - bw / 2, by, bw, bh, 14);
     this.add.text(this.px, by + bh / 2, '🌟 Quiz dei Lumini 🌟', {
@@ -63,11 +67,13 @@ export class QuizScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // --- Pepole mascotte (tifo) in basso a sinistra del pannello ------------
-    const mx = L + 30, myy = T + ph - 30;
+    // (Su schermo basso sta in ALTO a sinistra, accanto al festone: in basso copriva
+    // il bordo dei pulsanti-risposta.)
+    const mx = L + 30, myy = this._corto ? T + 58 : T + ph - 30;
     if (this.textures.exists('pepole-incoraggia') || this.textures.exists('pepole')) {
       const key = this.textures.exists('pepole-incoraggia') ? 'pepole-incoraggia' : 'pepole';
       this.pepole = this.add.image(mx, myy, key).setOrigin(0.5, 1);
-      this.pepole.setScale(64 / this.pepole.height);
+      this.pepole.setScale((this._corto ? 50 : 64) / this.pepole.height);
       this.tweens.add({ targets: this.pepole, y: myy - 5, yoyo: true, repeat: -1, duration: 900, ease: 'Sine.inOut' });
     } else {
       this.pepole = this.add.text(mx, myy, '🐶', { fontSize: '40px' }).setOrigin(0.5, 1);
@@ -362,27 +368,35 @@ export class QuizScene extends Phaser.Scene {
   // Domanda con icone (conta/somma) + pulsanti numerici in riga.
   _renderNumerica(d, add, qBottom, areaBottom) {
     const opt = d.opzioni;
-    const byBtn = areaBottom - 70;             // riga pulsanti in basso
-    const iconCY = (qBottom + byBtn - 40) / 2;  // icone nello spazio centrale
-
+    const bhN = this._corto ? 54 : 66;
+    const byBtn = areaBottom - 4 - bhN / 2;     // riga pulsanti in basso
     // Le icone DEVONO restare contabili anche col pannello basso (telefono in
-    // orizzontale): scalo in base allo spazio verticale disponibile, così non si
-    // sovrappongono alla domanda né ai pulsanti e restano ben visibili.
-    const banda = byBtn - qBottom - 46;
-    const scalaPer = (n) => { const righe = Math.ceil(n / Math.min(n, 4)); return Math.max(0.45, Math.min(1, banda / (righe * 74))); };
+    // orizzontale): stanno nella banda tra domanda e pulsanti, con una scala che
+    // tiene conto sia dell'altezza sia della larghezza (prima la 2ª riga di fiori
+    // finiva sopra i pulsanti).
+    const bTop = qBottom + 4, bBot = byBtn - bhN / 2 - 8;
+    const banda = Math.max(30, bBot - bTop);
+    const iconCY = (bTop + bBot) / 2;
+    const larg = (n, quote) => (this._pw - 60) * quote;
+    const perRigaDi = (n) => (this._corto && n <= 6 ? n : Math.min(n, 4));
+    const scalaPer = (n, quote = 1) => {
+      const pr = perRigaDi(n), righe = Math.ceil(n / pr);
+      return Math.max(0.4, Math.min(1, banda / (righe * 70), larg(n, quote) / (pr * 70)));
+    };
 
-    if (d.icone) this._icone(d.icone, this.px, iconCY, d.tema, add, scalaPer(d.icone));
+    if (d.icone) this._icone(d.icone, this.px, iconCY, d.tema, add, scalaPer(d.icone), perRigaDi(d.icone));
     else if (d.iconeDue) {
-      const sc = Math.min(0.9, scalaPer(Math.max(d.iconeDue[0], d.iconeDue[1])));
-      this._icone(d.iconeDue[0], this.px - this._pw * 0.22, iconCY, 'arancio', add, sc);
+      const nMax = Math.max(d.iconeDue[0], d.iconeDue[1]);
+      const sc = Math.min(0.9, scalaPer(nMax, 0.42));
+      this._icone(d.iconeDue[0], this.px - this._pw * 0.24, iconCY, 'arancio', add, sc, perRigaDi(nMax));
       add(this.add.text(this.px, iconCY, '+', { fontFamily: 'system-ui, sans-serif', fontSize: '38px', color: '#4a3322', fontStyle: 'bold' }).setOrigin(0.5));
-      this._icone(d.iconeDue[1], this.px + this._pw * 0.22, iconCY, 'azzurro', add, sc);
+      this._icone(d.iconeDue[1], this.px + this._pw * 0.24, iconCY, 'azzurro', add, sc, perRigaDi(nMax));
     }
 
     const bw = Math.min(108, (this._pw - 44) / opt.length - 10);
     opt.forEach((o, i) => {
       const ox = this.px + (i - (opt.length - 1) / 2) * (bw + 14);
-      const b = this._pulsante(ox, byBtn, bw, 66, COLORI[i % COLORI.length], o.label, 30, add);
+      const b = this._pulsante(ox, byBtn, bw, bhN, COLORI[i % COLORI.length], o.label, 30, add);
       if (o.corretta) this._btnCorretto = b;
       b.on('pointerdown', () => this._rispondi(!!o.corretta, b));
     });
@@ -391,11 +405,13 @@ export class QuizScene extends Phaser.Scene {
   // Risposte TESTUALI (Groq): pulsanti a tutta larghezza, in colonna.
   _renderTestuale(d, add, qBottom, areaBottom) {
     const opt = d.opzioni;
-    const spazio = areaBottom - 36 - (qBottom + 14);
-    const bh = Math.max(54, Math.min(74, spazio / opt.length - 12));
-    const gap = 12;
+    // In fondo restano ~30px per il messaggio ("Bravissimo!", "Evviva! Finito!"):
+    // prima l'altezza minima di 54px faceva traboccare i pulsanti sul messaggio.
+    const gap = this._corto ? 8 : 12;
+    const spazio = areaBottom - 30 - (qBottom + 10);
+    const bh = Math.max(34, Math.min(74, spazio / opt.length - gap));
     const totH = opt.length * bh + (opt.length - 1) * gap;
-    let y = (qBottom + 14) + Math.max(0, (spazio - totH) / 2) + bh / 2;
+    let y = (qBottom + 10) + Math.max(0, (spazio - totH) / 2) + bh / 2;
     const bw = this._pw - 64;
     opt.forEach((o, i) => {
       const b = this._pulsante(this.px, y, bw, bh, COLORI[i % COLORI.length], o.label, 21, add);
@@ -452,8 +468,8 @@ export class QuizScene extends Phaser.Scene {
   _coloraPulsante(c, colore) { this._disegna(c._g, c._w, c._h, colore); }
 
   // Disegna N icone (stelle, Lumini, gocce) con pop animato, su griglia.
-  _icone(n, cx, cy, tema, add, scala = 1) {
-    const perRiga = Math.min(n, 4);
+  _icone(n, cx, cy, tema, add, scala = 1, perRigaMax = 4) {
+    const perRiga = Math.min(n, perRigaMax);
     const sp = 70 * scala;
     const righe = Math.ceil(n / perRiga);
     let k = 0;

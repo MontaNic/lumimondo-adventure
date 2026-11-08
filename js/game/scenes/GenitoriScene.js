@@ -71,15 +71,22 @@ export class GenitoriScene extends Phaser.Scene {
     const pw = Math.min(420, width * 0.92);
     const nome = (window.GS && window.GS.profilo && window.GS.profilo.nome) || 'profilo attivo';
 
-    this.add.text(cx, 34, '👪 Area Genitori', {
-      fontFamily: FONT, fontSize: '26px', color: '#ffffff', fontStyle: 'bold',
+    const corto = height < 520;   // telefono in orizzontale: tutto più compatto
+    this.add.text(cx, corto ? 22 : 34, '👪 Area Genitori', {
+      fontFamily: FONT, fontSize: corto ? '22px' : '26px', color: '#ffffff', fontStyle: 'bold',
     }).setOrigin(0.5);
-    this.add.text(cx, 64, `Impostazioni di ${nome} · solo su questo dispositivo`, {
+    this.add.text(cx, corto ? 46 : 64, `Impostazioni di ${nome} · solo su questo dispositivo`, {
       fontFamily: FONT, fontSize: '14px', color: '#a9c1dc', align: 'center', wordWrap: { width: pw },
     }).setOrigin(0.5);
 
     // Spazio verticale adattivo (tablet orizzontale = poco spazio in altezza).
-    const y0 = 110, passo = Math.max(58, Math.min(74, (height - y0 - 150) / 4));
+    // Spazio per 4 righe + riga info + pulsante "Torna" (calcolato, non fisso: su
+    // schermi bassi il pulsante finiva sopra la riga del tempo di gioco).
+    const btnH = corto ? 44 : 56, infoH = corto ? 22 : 30;
+    const yTop = corto ? 64 : 82;
+    const passo = Math.max(40, Math.min(74, (height - yTop - btnH - infoH - 24) / 4));
+    this._altRiga = Math.min(50, passo - 8);
+    const y0 = yTop + passo / 2;
     this._riga(cx, y0, pw, () => `🌿 Pausa salute: ${imp().pausaSalute === false ? 'SPENTA' : 'ATTIVA'}`, () => {
       imp().pausaSalute = imp().pausaSalute === false;
       if (window.LUMI) window.LUMI.tempoGioco = 0;
@@ -101,15 +108,15 @@ export class GenitoriScene extends Phaser.Scene {
     }, 0x3a3150, 0x7b68b0);
 
     // Stato del conteggio: quanto manca alla prossima pausa.
-    this.info = this.add.text(cx, y0 + passo * 4 - 6, '', {
-      fontFamily: FONT, fontSize: '14px', color: '#cfe0f2', align: 'center', wordWrap: { width: pw },
+    this.info = this.add.text(cx, y0 + passo * 3.5 + infoH / 2, '', {
+      fontFamily: FONT, fontSize: corto ? '12px' : '14px', color: '#cfe0f2', align: 'center', wordWrap: { width: pw },
     }).setOrigin(0.5);
     this._aggiornaInfo();
     this.time.addEvent({ delay: 1000, loop: true, callback: () => this._aggiornaInfo() });
 
     // Torna al menu.
-    const by = Math.min(height - 44, y0 + passo * 4 + 50);
-    const bg = this.add.rectangle(cx, by, Math.min(260, pw), 56, 0x2c7a33)
+    const by = Math.min(height - btnH / 2 - 8, y0 + passo * 3.5 + infoH + 12 + btnH / 2);
+    const bg = this.add.rectangle(cx, by, Math.min(260, pw), btnH, 0x2c7a33)
       .setStrokeStyle(3, 0x16451c).setInteractive({ useHandCursor: true });
     this.add.text(cx, by, '◀  Torna al menu', {
       fontFamily: FONT, fontSize: '20px', color: '#ffffff', fontStyle: 'bold',
@@ -137,7 +144,7 @@ export class GenitoriScene extends Phaser.Scene {
 
   /** Riga-pulsante: tocca per cambiare valore. `testo` è una funzione (rilettura dopo il tocco). */
   _riga(x, y, w, testo, azione, colore = 0x24425f, bordo = 0x4f86bd) {
-    const bg = this.add.rectangle(x, y, w, 50, colore).setStrokeStyle(2, bordo).setInteractive({ useHandCursor: true });
+    const bg = this.add.rectangle(x, y, w, this._altRiga || 50, colore).setStrokeStyle(2, bordo).setInteractive({ useHandCursor: true });
     const t = this.add.text(x, y, testo(), {
       fontFamily: FONT, fontSize: '17px', color: '#ffffff', fontStyle: 'bold', align: 'center', wordWrap: { width: w - 16 },
     }).setOrigin(0.5);
