@@ -25,6 +25,7 @@ import { NegozioScene } from './scenes/NegozioScene.js';
 import { TutorialScene } from './scenes/TutorialScene.js';
 import { salvaGS } from '../gs.js';
 import { pushBeacon } from '../sync.js';
+import { GAME_VERSION } from '../version.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -63,8 +64,96 @@ if (_reset) {
   })();
 }
 
+// --- ANTI-FREEZE: ciclo dei fotogrammi a prova di errore -------------------
+// CAUSA dei freeze "si blocca tutto ma la musica va, devo chiudere e riaprire":
+// in Phaser 3.60 il ciclo fa `callback(t); requestAnimationFrame(step)`, cioè
+// prenota il fotogramma successivo SOLO DOPO aver finito quello corrente. Un
+// qualsiasi errore JS dentro update()/render di una scena (o in un tween/timer)
+// interrompe il fotogramma PRIMA della prenotazione → il ciclo muore per sempre.
+// Il recupero su window 'error' non bastava: stop/start delle scene li esegue
+// proprio quel ciclo, che era morto. Qui avvolgo Game.step in try/catch: l'errore
+// si registra (localStorage 'ultimoErrore', con stack e scene), il gioco va avanti
+// e si tenta il recupero alla mappa. Se gli errori si ripetono a raffica (scena
+// rotta a ogni fotogramma) salvo e ricarico la pagina, al massimo una volta al minuto.
+let ultimoRecupero = 0;
+const _erroriRecenti = [];
+function _registraErrore(err, origine) {
+  try {
+    const sm = window.gioco && window.gioco.scene;
+    const scene = sm ? sm.getScenes(true).map((s) => s.scene.key) : [];
+    localStorage.setItem('ultimoErrore', JSON.stringify({
+      m: String((err && err.message) || err), stack: String((err && err.stack) || '').slice(0, 1500),
+      origine, scene, t: Date.now(), v: GAME_VERSION,
+    }));
+  } catch { /* niente */ }
+}
+function _recuperoEmergenza() {
+  const now = Date.now();
+  if (!window.gioco || now - ultimoRecupero < 8000) return;
+  const sm = window.gioco.scene;
+  if (!sm) return;
+  const attive = sm.getScenes(true).map((s) => s.scene.key);
+  if (attive.includes('MappaMondoScene') || attive.includes('MenuScene') || attive.includes('BootScene')) return;
+  ultimoRecupero = now;
+  try { attive.forEach((k) => sm.stop(k)); sm.start('MappaMondoScene'); } catch { /* niente */ }
+}
+function _ricaricaSicura(motivo) {
+  try {
+    const ultima = Number(sessionStorage.getItem('lumiRicaricaT') || 0);
+    if (Date.now() - ultima < 60000) return false;          // mai in loop di ricariche
+    sessionStorage.setItem('lumiRicaricaT', String(Date.now()));
+    sessionStorage.setItem('lumiRicaricaMotivo', motivo);
+  } catch { /* niente */ }
+  _flushSalvataggio();                                       // i progressi restano
+  location.reload();
+  return true;
+}
+(function cicloAProvaDiErrore() {
+  const stepOriginale = Phaser.Game.prototype.step;
+  Phaser.Game.prototype.step = function (time, delta) {
+    try {
+      stepOriginale.call(this, time, delta);
+    } catch (err) {
+      if (_erroriRecenti.length < 3) console.error('[anti-freeze] errore nel fotogramma:', err);
+      _registraErrore(err, 'ciclo');
+      const now = Date.now();
+      _erroriRecenti.push(now);
+      while (_erroriRecenti.length && now - _erroriRecenti[0] > 10000) _erroriRecenti.shift();
+      if (_erroriRecenti.length >= 5 && _ricaricaSicura('errori-ripetuti')) return;
+      _recuperoEmergenza();
+    }
+  };
+})();
+
 // eslint-disable-next-line no-new
 if (!_reset) window.gioco = new Phaser.Game(config);
+
+// --- ANTI-FREEZE: grafica persa (WebGL context lost) -----------------------
+// Su iPad/tablet, in standby o cambiando app, Safari può togliere al gioco il
+// contesto grafico. Phaser 3.60 in quel caso disabilita il renderer per sempre
+// ("WebGL Context lost. Renderer disabled") → schermo fermo/nero. Unico rimedio
+// affidabile: salvare e ricaricare, appena la pagina è di nuovo visibile.
+if (window.gioco) {
+  let graficaPersa = false;
+  const ricaricaSeVisibile = () => {
+    if (graficaPersa && !document.hidden) _ricaricaSicura('grafica-persa');
+  };
+  const agganciaCanvas = () => {
+    const c = window.gioco && window.gioco.canvas;
+    if (!c || c._lumiContextLost) return;
+    c._lumiContextLost = true;
+    c.addEventListener('webglcontextlost', () => {
+      graficaPersa = true;
+      _registraErrore(new Error('WebGL context lost'), 'grafica');
+      _flushSalvataggio();
+      setTimeout(ricaricaSeVisibile, 300);
+    });
+  };
+  agganciaCanvas();
+  window.gioco.events.once('ready', agganciaCanvas);
+  document.addEventListener('visibilitychange', ricaricaSeVisibile);
+  window.addEventListener('pageshow', ricaricaSeVisibile);
+}
 
 // --- Allineamento input (fix "devo cliccare in alto") --------------------
 // Su mobile la barra del browser/indirizzo e i cambi di viewport spostano il
@@ -193,7 +282,7 @@ setInterval(() => {
 }, 5000);
 
 // --- #4 Promemoria di PAUSA SALUTE ---------------------------------------
-// Ogni ~25 min di gioco ATTIVO (solo scene di gioco visibili, niente overlay/
+// Ogni 60 min (default, regolabile dal genitore) di gioco ATTIVO (solo scene di gioco visibili, niente overlay/
 // cinematiche, finestra in primo piano) un invito gentile a fare una pausa.
 // Override per test/genitori: window.LUMI_PAUSA_MS (durata) e LUMI_RIPOSO_SECONDI.
 window.LUMI.tempoGioco = 0;
@@ -217,7 +306,7 @@ setInterval(() => {
   const imp = (window.GS && window.GS.impostazioni) || {};
   if (imp.pausaSalute === false || window.LUMI.pausaBypass) { window.LUMI.tempoGioco = 0; return; }
   window.LUMI.tempoGioco += 1000;
-  const minuti = (typeof imp.pausaSaluteMin === 'number' && imp.pausaSaluteMin >= 5) ? imp.pausaSaluteMin : 45;
+  const minuti = (typeof imp.pausaSaluteMin === 'number' && imp.pausaSaluteMin >= 5) ? imp.pausaSaluteMin : 60;   // default 1 ora (prima 45 min)
   const soglia = (window.LUMI_PAUSA_MS | 0) || (minuti * 60 * 1000);
   // Scatta SOLO su mappa o città (mai a metà battaglia/dialogo/quiz, che non sono in
   // _SCENE_GIOCO "in cima" o sono battaglia): il tempo conta lo stesso, ma il promemoria
@@ -273,17 +362,11 @@ setInterval(() => {
 
 // --- Mai schermo nero davanti a un bambino (P1-16) ------------------------
 // Se una scena crasha: recupero d'emergenza alla mappa (gag invece di trauma).
-let ultimoRecupero = 0;
+// (Errori FUORI dal ciclo dei fotogrammi: timer/eventi DOM/promesse. Quelli dentro
+// il ciclo li gestisce cicloAProvaDiErrore, più sopra.)
 window.addEventListener('error', (e) => {
-  try { localStorage.setItem('ultimoErrore', JSON.stringify({ m: String(e.message || e), t: Date.now() })); } catch {}
-  const now = Date.now();
-  if (!window.gioco || now - ultimoRecupero < 8000) return;
-  const sm = window.gioco.scene;
-  if (!sm) return;
-  const attive = sm.getScenes(true).map((s) => s.scene.key);
-  if (attive.includes('MappaMondoScene') || attive.includes('MenuScene') || attive.includes('BootScene')) return;
-  ultimoRecupero = now;
-  try { attive.forEach((k) => sm.stop(k)); sm.start('MappaMondoScene'); } catch {}
+  _registraErrore(e.error || e.message || e, 'window');
+  _recuperoEmergenza();
 });
 
 // Registrazione service worker (network-first in sviluppo: vedi sw.js).
