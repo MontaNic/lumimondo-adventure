@@ -150,10 +150,19 @@ export class BattagliaScene extends Phaser.Scene {
     // Posizioni combattenti.
     this.posAvv = { x: width * 0.72, y: height * 0.30 };
     this.posAll = { x: width * 0.30, y: height * 0.54 };
+    // SCALA ADATTIVA dei Lumini: prima erano fissi (1.45 / 1.15), perfetti sul tablet
+    // orizzontale ma enormi sugli schermi bassi (telefono in orizzontale): il mio Lumino
+    // finiva SOTTO il pannello mosse e l'avversario sopra al titolo. Riferimento: il
+    // campo libero sopra il pannello (~136px) di un iPad orizzontale.
+    this.SC = Phaser.Math.Clamp(Math.min((height - 136) / 640, width / 900), 0.45, 1);
+    this.scAll = 1.45 * this.SC;
+    this.scAvv = 1.15 * this.SC;
+    // Pepole: sopra la barra del mio Lumino (che sta a H-200), mai coperta da essa.
+    this.posPep = { x: width * 0.13, y: Math.min(height * 0.62, height - 236) };
 
     // Pedane ellittiche sotto i piedi (profondità come nei GDR classici).
-    disegnaPedana(this, this.pal, this.posAvv.x, this.posAvv.y, 150);
-    disegnaPedana(this, this.pal, this.posAll.x, this.posAll.y, 185);
+    disegnaPedana(this, this.pal, this.posAvv.x, this.posAvv.y, 150 * this.SC, this.SC);
+    disegnaPedana(this, this.pal, this.posAll.x, this.posAll.y, 185 * this.SC, this.SC);
 
     Juice.bottonePausa(this, this.W - 40, 38);
     // Pannello DEBUG (?debug): stato live + ultimi eventi. Se la battaglia si blocca,
@@ -206,16 +215,16 @@ export class BattagliaScene extends Phaser.Scene {
 
     // L'avversario è già in campo (entrata da _introBattaglia). Schiero il TUO
     // Lumino con uno slide da sinistra + "Vai!" (stile GDR retrò).
-    this.alleato = new Lumino(this, -220, this.posAll.y, specie).setScale(1.45).setDepth(110);
+    this.alleato = new Lumino(this, -220, this.posAll.y, specie).setScale(this.scAll).setDepth(110);
     if (audio.suono) audio.suono('lancio');
     this.tweens.add({
       targets: this.alleato, x: this.posAll.x, duration: 500, ease: 'Cubic.out',
-      onComplete: () => this.tweens.add({ targets: this.alleato, scaleX: 1.45 * 1.1, scaleY: 1.45 * 0.88, duration: 100, yoyo: true, ease: 'Quad.out' }),
+      onComplete: () => this.tweens.add({ targets: this.alleato, scaleX: this.scAll * 1.1, scaleY: this.scAll * 0.88, duration: 100, yoyo: true, ease: 'Quad.out' }),
     });
     cartello(this, `Vai, ${(LUMINI[specie] || {}).nome || 'Lumino'}!`, { dur: 1100 });
 
     // Pepole nell'angolo (nascosta se è lei in campo).
-    this.pepole = new Pepole(this, this.W * 0.13, this.H * 0.62, { scala: 0.9 });
+    this.pepole = new Pepole(this, this.posPep.x, this.posPep.y, { scala: 0.9 * Math.max(0.7, this.SC) });
     if (this.pepoleAttiva) this.pepole.setVisible(false);
 
     this.barAvv = barraEnergia(this, 12, 14, this.cfgAvversario);
@@ -587,7 +596,7 @@ export class BattagliaScene extends Phaser.Scene {
     this.alleato.setEspressione('normale'); this.avversario.setEspressione('normale');
     this.alleato.setAngle(0); this.avversario.setAngle(0);
     this.alleato.setAlpha(1); this.avversario.setAlpha(1);
-    this.alleato.setScale(this.alleato._scalaBase || 1.45); this.avversario.setScale(1.15);
+    this.alleato.setScale(this.alleato._scalaBase || this.scAll); this.avversario.setScale(this.scAvv);
     this.alleato.setPosition(this.posAll.x, this.posAll.y);
     this.avversario.setPosition(this.posAvv.x, this.posAvv.y);
     const sA = this.eng.stato();
@@ -770,7 +779,7 @@ export class BattagliaScene extends Phaser.Scene {
       Juice.coriandoli(this, this.W / 2, this.H * 0.35, 22);
       if (window.GS) window.GS.stelline = (window.GS.stelline || 0) + 1;
     }
-    FX.esclamazione(this, this.posAll.x, this.posAll.y - 110, 'Pepole, aiuto!', '#ffd23f');
+    FX.esclamazione(this, this.posAll.x, this.posAll.y - 110 * this.SC, 'Pepole, aiuto!', '#ffd23f');
     this.pepole.setVisible(true);
     this.tweens.add({ targets: this.pepole, x: this.posAll.x + 28, y: this.posAll.y + 8, duration: 360, ease: 'Back.out' });
     this.alleato.setAlpha(0.5);                 // il Lumino arretra (in panchina)
@@ -780,8 +789,8 @@ export class BattagliaScene extends Phaser.Scene {
     } finally {
       // Ripristino SEMPRE lo stato visivo (anche se l'azione non è partita).
       if (this.alleato) this.alleato.setAlpha(1);
-      FX.esclamazione(this, this.posAll.x, this.posAll.y - 110, 'Tocca a te!', '#7ad0ff');
-      this.tweens.add({ targets: this.pepole, x: this.W * 0.13, y: this.H * 0.62, duration: 360, ease: 'Quad.in' });
+      FX.esclamazione(this, this.posAll.x, this.posAll.y - 110 * this.SC, 'Tocca a te!', '#7ad0ff');
+      this.tweens.add({ targets: this.pepole, x: this.posPep.x, y: this.posPep.y, duration: 360, ease: 'Quad.in' });
     }
   }
 

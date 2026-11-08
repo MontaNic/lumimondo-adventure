@@ -34,7 +34,9 @@ export class StarterScene extends Phaser.Scene {
     // Scrigno decorativo in alto.
     if (this.textures.exists('obj-scrigno')) {
       const chest = this.add.image(W / 2, H * 0.20, 'obj-scrigno');
-      chest.setScale(Math.min(W * 0.5, 240) / chest.width);
+      // Limite anche in ALTEZZA: sugli schermi bassi lo scrigno copriva il titolo.
+      chest.setScale(Math.min(Math.min(W * 0.5, 240) / chest.width, (H * 0.26) / chest.height));
+      chest.y = Math.max(H * 0.20, H * 0.06 + 22 + chest.displayHeight / 2);
       this.tweens.add({ targets: chest, y: chest.y - 6, yoyo: true, repeat: -1, duration: 1400, ease: 'Sine.inOut' });
     }
     this.add.text(W / 2, H * 0.06, 'Scegli il tuo primo amico!', {

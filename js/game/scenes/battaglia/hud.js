@@ -74,7 +74,7 @@ export function aggiornaBarra(scene, bar, energia, energiaMax) {
 export function badgeTipo(scene, specie) {
   if (scene._badgeAvv) scene._badgeAvv.destroy();
   const el = (LUMINI[specie] || {}).elemento || 'mistero';
-  const c = scene.add.container(scene.posAvv.x + 64, scene.posAvv.y - 64).setDepth(140);
+  const c = scene.add.container(scene.posAvv.x + 64 * (scene.SC || 1), scene.posAvv.y - 64 * (scene.SC || 1)).setDepth(140);
   const cir = scene.add.circle(0, 0, 17, COL_ELEM[el] || 0x888888).setStrokeStyle(3, 0xfff6e3);
   const emo = scene.add.text(0, 0, EMO_ELEM[el] || '❓', { fontSize: '18px' }).setOrigin(0.5);
   c.add([cir, emo]);
