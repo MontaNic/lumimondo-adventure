@@ -27,6 +27,7 @@ import { GenitoriScene } from './scenes/GenitoriScene.js';
 import { salvaGS } from '../gs.js';
 import { pushBeacon } from '../sync.js';
 import { GAME_VERSION } from '../version.js';
+import { installaHiDPI } from './hidpi.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -125,6 +126,9 @@ function _ricaricaSicura(motivo) {
     }
   };
 })();
+
+// Disegno nitido sugli schermi Retina (telefono/iPad): vedi hidpi.js.
+installaHiDPI();
 
 // eslint-disable-next-line no-new
 if (!_reset) window.gioco = new Phaser.Game(config);
