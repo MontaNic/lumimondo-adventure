@@ -5,6 +5,7 @@ import musica from '../../musica.js';
 import audio from '../../audio.js';
 import { salvaGS } from '../../gs.js';
 import * as Juice from '../juice.js';
+import { apriAreaGenitori } from './GenitoriScene.js';
 
 export class MenuScene extends Phaser.Scene {
   constructor() { super('MenuScene'); }
@@ -57,9 +58,12 @@ export class MenuScene extends Phaser.Scene {
       this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('MappaMondoScene'));
     });
 
-    this.add.text(width - 8, height - 6, 'v' + GAME_VERSION, {
-      fontFamily: 'monospace', fontSize: '12px', color: '#ffffff',
-    }).setOrigin(1, 1).setAlpha(0.7);
+    // Margini dagli angoli: la camera "respira" con zoom fino a 1.04, che taglia i bordi
+    // (la versione si leggeva a metà). 2.5% + qualche pixel li tiene sempre visibili.
+    const mx = Math.round(width * 0.025) + 8, my = Math.round(height * 0.025) + 6;
+    this.add.text(width - mx, height - my, 'v' + GAME_VERSION, {
+      fontFamily: 'monospace', fontSize: '13px', color: '#ffffff',
+    }).setOrigin(1, 1).setAlpha(0.8);
 
     // #65 — Badge "Campione" + entrata 2 giocatori, sbloccati a gioco finito.
     const fatto = !!(window.GS && window.GS.progressiStoria && window.GS.progressiStoria['luminia:fatta']) || !!(window.GS && window.GS.campione);
@@ -95,9 +99,21 @@ export class MenuScene extends Phaser.Scene {
       this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('TutorialScene', { ritorno: 'MenuScene' }));
     });
 
+    // Area Genitori (alternativa locale al pannello /admin): piccola, in alto a destra,
+    // protetta da password → i bimbi non ci entrano per sbaglio.
+    const gen = this.add.text(width - mx, my, '👪 Genitori', {
+      fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#ffffff', fontStyle: 'bold',
+      backgroundColor: '#00000044', padding: { x: 10, y: 6 },
+    }).setOrigin(1, 0).setInteractive({ useHandCursor: true });
+    gen.on('pointerdown', (p, lx, ly, ev) => {
+      ev?.stopPropagation?.();
+      audio.suono('tocco');
+      apriAreaGenitori(this, 'MenuScene');
+    });
+
     // Toggle musica (separato dalla voce), persistito in GameState.
     const musOn = () => (window.GS?.impostazioni?.musica !== false);
-    const tBtn = this.add.text(14, height - 16, '', {
+    const tBtn = this.add.text(mx, height - my, '', {
       fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: '#ffffff', fontStyle: 'bold',
       backgroundColor: '#00000044', padding: { x: 10, y: 6 },
     }).setOrigin(0, 1).setInteractive({ useHandCursor: true });

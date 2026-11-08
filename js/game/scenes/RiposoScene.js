@@ -1,6 +1,6 @@
 /* RiposoScene — #4 promemoria di PAUSA SALUTE (overlay).
  *
- * Ogni ~25 min di gioco attivo (vedi main.js) Pietro viene invitato a fare una
+ * Ogni N min di gioco attivo (default 60, regolabile nell'Area Genitori; vedi main.js) Pietro viene invitato a fare una
  * pausa: sgranchirsi, bere un po' d'acqua, guardare lontano. Niente di punitivo:
  * un micro-riposo guidato di pochi secondi con Pepole che sonnecchia, poi si
  * riprende. Si lancia SOPRA la scena di gioco messa in pausa (parent) e la
@@ -10,13 +10,7 @@
 import { Pepole } from '../pepole-actor.js';
 import audio from '../../audio.js';
 import voce from '../../voce.js';
-
-/** SHA-256 esadecimale (per verificare offline la password "bypass" dei genitori,
- *  il cui hash arriva da /api/config). Richiede contesto sicuro (HTTPS/localhost). */
-async function sha256hex(s) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(s)));
-  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
-}
+import { bypassDisponibile, verificaPassword } from '../../genitori.js';
 
 export class RiposoScene extends Phaser.Scene {
   constructor() { super('RiposoScene'); }
@@ -73,9 +67,9 @@ export class RiposoScene extends Phaser.Scene {
     this.time.addEvent({ delay: 1000, repeat: SEC - 1, callback: tic });
     audio.suono('stellina');
 
-    // Bypass GENITORI: piccolo link in basso. Con la password impostata in /admin un
-    // adulto può saltare la pausa (e non riproporla per questa sessione).
-    if (window.LUMI && window.LUMI.pausaHash) this._bottoneGenitori(cx, top + ph - 16);
+    // Bypass GENITORI: piccolo link in basso. Con la password dell'Area Genitori (o di
+    // /admin, se c'è un server) un adulto può saltare la pausa per questa sessione.
+    if (bypassDisponibile()) this._bottoneGenitori(cx, top + ph - 16);
   }
 
   _bottoneGenitori(x, y) {
@@ -87,14 +81,11 @@ export class RiposoScene extends Phaser.Scene {
   }
 
   async _chiediBypass() {
-    const hash = window.LUMI && window.LUMI.pausaHash;
-    if (!hash) return this._toast('Nessuna password impostata (vedi /admin).');
+    if (!bypassDisponibile()) return this._toast('Nessuna password: impostala nell\'Area Genitori del menu.');
     let pw = null;
     try { pw = window.prompt('Password genitori per saltare la pausa:'); } catch { pw = null; }
     if (!pw) return;
-    let ok = false;
-    try { ok = (await sha256hex(pw)) === hash; } catch { ok = false; }
-    if (ok) { if (window.LUMI) window.LUMI.pausaBypass = true; this._riprendi(); }
+    if (await verificaPassword(pw)) { if (window.LUMI) window.LUMI.pausaBypass = true; this._riprendi(); }
     else this._toast('Password errata.');
   }
 
