@@ -157,6 +157,8 @@ export class BattagliaScene extends Phaser.Scene {
     this.SC = Phaser.Math.Clamp(Math.min((height - 136) / 640, width / 900), 0.45, 1);
     this.scAll = 1.45 * this.SC;
     this.scAvv = 1.15 * this.SC;
+    // Su schermi bassi le zampe (e la pedana) non devono finire sotto il pannello mosse.
+    this.posAll.y = Math.min(this.posAll.y, height - 142 - 66 * this.scAll);
     // Pepole: sopra la barra del mio Lumino (che sta a H-200), mai coperta da essa.
     this.posPep = { x: width * 0.13, y: Math.min(height * 0.62, height - 236) };
 
