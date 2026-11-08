@@ -28,10 +28,11 @@ export function disegnaSfondo(scene) {
 }
 
 /** Pedana ellittica sotto un Lumino (con ombra e riflesso). */
-export function disegnaPedana(scene, pal, x, y, w) {
+export function disegnaPedana(scene, pal, x, y, w, k = 1) {
+  // k = scala dei Lumini sullo schermo corrente (gli scostamenti verticali la seguono).
   const g = scene.add.graphics().setDepth(-500);
-  g.fillStyle(0x000000, 0.12); g.fillEllipse(x, y + 60, w * 1.05, w * 0.36);   // ombra
-  g.fillStyle(shade(pal.g1, 0.1), 1); g.fillEllipse(x, y + 56, w, w * 0.30);
-  g.lineStyle(4, shade(pal.g3, -0.1), 0.7); g.strokeEllipse(x, y + 56, w, w * 0.30);
-  g.fillStyle(shade(pal.g1, 0.22), 0.5); g.fillEllipse(x - w * 0.12, y + 50, w * 0.5, w * 0.14);
+  g.fillStyle(0x000000, 0.12); g.fillEllipse(x, y + 60 * k, w * 1.05, w * 0.36);   // ombra
+  g.fillStyle(shade(pal.g1, 0.1), 1); g.fillEllipse(x, y + 56 * k, w, w * 0.30);
+  g.lineStyle(4, shade(pal.g3, -0.1), 0.7); g.strokeEllipse(x, y + 56 * k, w, w * 0.30);
+  g.fillStyle(shade(pal.g1, 0.22), 0.5); g.fillEllipse(x - w * 0.12, y + 50 * k, w * 0.5, w * 0.14);
 }

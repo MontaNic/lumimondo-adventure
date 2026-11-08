@@ -138,7 +138,7 @@ async function sequenzaCattura(scene, ball, at) {
   FX.flashSchermo(scene, 0xffffff, 0.6, 200);
   scene.tweens.add({ targets: scene.avversario, scale: 0.1, alpha: 0, duration: 250 });
   await scene._attesa(280);
-  const terra = scene.posAvv.y + 56;
+  const terra = scene.posAvv.y + 56 * (scene.SC || 1);
   await new Promise((r) => scene.tweens.add({ targets: ball, y: terra, duration: 260, ease: 'Quad.in', onComplete: r }));
 
   // 3 rimbalzi decrescenti.
@@ -213,7 +213,7 @@ function catturaFallita(scene, ball) {
   // Sfera si apre, flash, Lumino riemerge + humor di Pepole.
   FX.flashSchermo(scene, 0xffffff, 0.5, 180);
   scene.tweens.add({ targets: ball, alpha: 0, scale: 0.3, duration: 250, onComplete: () => ball.destroy() });
-  scene.avversario.setScale(1.15).setAlpha(0);           // era rimpicciolito/invisibile: riemerge
+  scene.avversario.setScale(scene.scAvv || 1.15).setAlpha(0);           // era rimpicciolito/invisibile: riemerge
   scene.tweens.add({ targets: scene.avversario, alpha: 1, duration: 200 });
   scene.avversario.scuoti(8);
   scene.pepole.reagisci();

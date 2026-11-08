@@ -32,7 +32,8 @@ export class PausaScene extends Phaser.Scene {
     const inCitta = this.parent === 'CittaScene';
     // In ORIZZONTALE (telefono ruotato) lo spazio in altezza è poco → menu a 2 COLONNE,
     // così slider e accessibilità non finiscono fuori dal pannello.
-    const wide = width > height && height < 620;
+    // (calcolato più sotto, quando si sa quante voci ci sono.)
+    let wide = width > height && height < 620;
 
     // Voci del menu (secondo contesto): in battaglia solo Salva (le altre farebbero
     // ripartire lo scontro al ritorno).
@@ -52,8 +53,13 @@ export class PausaScene extends Phaser.Scene {
     // Senza save-server, il file di backup è l'UNICA copia dell'avventura fuori dal browser.
     voci.push({ l: '📤\nBackup', c: 0x3a6ea5, fn: () => this._backup() });
 
+    // Altezza che serve DAVVERO al layout verticale (prima era fissa a 640px e il
+    // contenuto traboccava: "Suoni" coperto da "Effetti", "Testo grande" sotto a
+    // "Riprendi"). Se lo schermo è orizzontale e non basta, si passa a 2 colonne.
+    const altezzaTall = 98 + Math.ceil(voci.length / 4) * 70 + 539;
+    if (width > height && height * 0.95 < altezzaTall) wide = true;
     const pw = wide ? Math.min(770, width * 0.95) : Math.min(420, width * 0.95);
-    const ph = wide ? Math.min(404, height * 0.96) : Math.min(640, height * 0.95);
+    const ph = wide ? Math.min(404, height * 0.96) : Math.min(altezzaTall, height * 0.95);
     const px = width / 2, py = height / 2, top = py - ph / 2;
     const g = this.add.graphics();
     g.fillStyle(0x000000, 0.25); g.fillRoundedRect(px - pw / 2 + 4, top + 8, pw, ph, 22);
@@ -97,7 +103,7 @@ export class PausaScene extends Phaser.Scene {
     let y = gy0 - gbh / 2 + Math.ceil(voci.length / perRiga) * (gbh + gap) + 14;
     g.lineStyle(2, 0xffffff, 0.1); g.lineBetween(L, y, R, y);
     // SEZIONE "Suoni" — slider ben spaziati.
-    y += 22; sezione(y, '🔊  SUONI'); y += 26;
+    y += 22; sezione(y, '🔊  SUONI'); y += 50;   // l'etichetta dello slider sta 22px SOPRA la barra
     const sw = pw - 68, GAP = 60;
     this._slider(px, y, sw, '🔊  Effetti', () => getNum('volumeEffetti', 0.5),
       (v) => { setVal('volumeEffetti', v); audio.applicaVolume(); }, () => audio.suono('tocco'));

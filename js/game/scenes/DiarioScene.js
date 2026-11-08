@@ -39,8 +39,17 @@ export class DiarioScene extends Phaser.Scene {
       fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#bfa9e0', fontStyle: 'bold',
     }).setOrigin(0.5);
 
-    const top = 92, rowH = Math.min(86, (H - top - 90) / MEDAGLIE.length);
-    MEDAGLIE.forEach((m, i) => this._riga(m, mie.includes(m.id), W / 2, top + i * rowH + rowH / 2, W - 40, rowH - 10));
+    // Schermo basso (telefono orizzontale): 2 colonne, altrimenti le righe diventano
+    // alte ~30px e la descrizione finisce sopra la riga successiva.
+    const col = (H < 520 && W > 700) ? 2 : 1;
+    const righe = Math.ceil(MEDAGLIE.length / col);
+    const top = 92, rowH = Math.min(86, (H - top - 90) / righe);
+    const cw = (W - 40 - (col - 1) * 12) / col;
+    MEDAGLIE.forEach((m, i) => {
+      const r = Math.floor(i / col), k = i % col;
+      const cx = 20 + cw / 2 + k * (cw + 12);
+      this._riga(m, mie.includes(m.id), cx, top + r * rowH + rowH / 2, cw, rowH - 10);
+    });
 
     // Pulsante Esci.
     const bw = 150, bh = 54;

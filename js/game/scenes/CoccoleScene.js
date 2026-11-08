@@ -47,13 +47,21 @@ export class CoccoleScene extends Phaser.Scene {
     const btnY = (exitY - 17) - 8 - btnH / 2;
     const selY = short ? 64 : 74;
     const top = selY + 21, bot = (btnY - btnH / 2) - 8;
-    const groupCy = (top + bot) / 2;
-    const ls = clamp(((bot - top) - 200) / 150, 0.62, 1.45);
+    // Ingombro REALE del Lumino PNG (origine 0.62 su ~150px): ~96px sopra il centro e
+    // ~60px sotto, per scala 1. Prima il calcolo usava ±52 (misura del vecchio disegno
+    // procedurale) → il Lumino copriva il fumetto "come si sente" e il nome i suoi piedi.
+    const SOPRA = 96, SOTTO = 60, TESTA = short ? 60 : 88, CODA = 62;   // TESTA = faccia+fumetto, CODA = nome..legame
+    const avail = bot - top;
+    const ls = clamp((avail - TESTA - CODA - 12) / (SOPRA + SOTTO), 0.45, 1.45);
+    const totale = TESTA + (SOPRA + SOTTO) * ls + CODA;
+    const y0 = top + Math.max(0, (avail - totale) / 2);
+    const lumCy = y0 + TESTA + SOPRA * ls;
+    const sotto = lumCy + SOTTO * ls;
     this.LY = {
-      short, btnH, exitY, btnY, selY, lumCy: groupCy, lumScale: ls,
-      facciaY: groupCy - ls * 52 - 40, hintY: groupCy - ls * 52 - 12,
-      nameY: groupCy + ls * 50 + 8, heartsY: groupCy + ls * 50 + 30,
-      barY: groupCy + ls * 50 + 46, sazY: groupCy + ls * 50 + 60,
+      short, btnH, exitY, btnY, selY, lumCy, lumScale: ls,
+      facciaY: y0 + (short ? 20 : 26), hintY: y0 + (short ? 48 : 70),
+      nameY: sotto + 10, heartsY: sotto + 30,
+      barY: sotto + 47, sazY: sotto + 60,
     };
   }
 
@@ -102,7 +110,8 @@ export class CoccoleScene extends Phaser.Scene {
     this._comeSi = this.add.text(W / 2, LY.hintY, '', {
       fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#3a2c22', fontStyle: 'bold',
       backgroundColor: '#ffffffee', padding: { x: 10, y: 3 }, align: 'center', wordWrap: { width: W - 60 },
-    }).setOrigin(0.5);
+    }).setOrigin(0.5).setDepth(20);
+    this._faccia.setDepth(20); this._emote.setDepth(20);
   }
 
   _legamePersistente() {

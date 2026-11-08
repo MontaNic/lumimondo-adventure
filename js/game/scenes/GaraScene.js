@@ -46,15 +46,20 @@ export class GaraScene extends Phaser.Scene {
   _calcolaLayout() {
     const H = this.H, short = H < 520;
     const btnH = clamp(Math.round(H * 0.14), 44, 54);
-    const exitY = H - 22;
+    const exitY = H - 28;                                 // (era H-22: il tasto toccava il bordo)
     const btnY = (exitY - 17) - 8 - btnH / 2;
     const barY = (btnY - btnH / 2) - 30;                 // barra del tempo / riga istruzioni
     const juryY = short ? 76 : 88;
     const top = juryY + 22, bot = barY - 24;
-    const groupCy = (top + bot) / 2;
-    const ls = clamp(((bot - top) - 90) / 150, 0.58, 1.35);
-    const lumCy = groupCy - ls * 26;                     // Lumino un po' più su → sotto ci stanno score+combo
-    this.LY = { short, btnH, exitY, btnY, barY, juryY, lumCy, lumScale: ls, scoreY: lumCy + ls * 50 + 10, comboY: lumCy + ls * 50 + 28 };
+    // Ingombro REALE del Lumino PNG: ~96px sopra il centro, ~60px sotto (scala 1).
+    // Prima si usava ±50 → la riga "Turno · Stile" finiva sopra le zampe del Lumino.
+    const SOPRA = 96, SOTTO = 60, CODA = 50;              // CODA = punteggio + combo
+    const avail = bot - top;
+    const ls = clamp((avail - CODA) / (SOPRA + SOTTO), 0.45, 1.35);
+    const y0 = top + Math.max(0, (avail - (SOPRA + SOTTO) * ls - CODA) / 2);
+    const lumCy = y0 + SOPRA * ls;
+    const sotto = lumCy + SOTTO * ls;
+    this.LY = { short, btnH, exitY, btnY, barY, juryY, lumCy, lumScale: ls, scoreY: sotto + 12, comboY: sotto + 32 };
   }
 
   create() {

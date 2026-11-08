@@ -6,7 +6,10 @@
  * le callback verso il motore restano nella scena (scene._iniziaBattaglia,
  * scene._scuotiCamera). `cartello` è usata anche da _iniziaBattaglia (nella scena).
  */
-import { LUMINI, moltiplicatoreTipo } from '../../../lumini-data.js';
+import { LUMINI, moltiplicatoreTipo, ELEMENTI } from '../../../lumini-data.js';
+
+/** Nome leggibile dell'elemento (con accenti: 'elettricita' → 'Elettricità'). */
+const nomeEl = (el) => (ELEMENTI[el] && ELEMENTI[el].nome) || el || '';
 import { Lumino } from '../../lumino.js';
 import { texGiocatore } from '../../sprites.js';
 import * as FX from '../../effetti.js';
@@ -68,7 +71,7 @@ export function anteprimaSquadraCapo(scene, cb) {
       if (chiuso || !c.scene) return;
       const base = LUMINI[c._sp] || {};
       c._nm.setText(base.nome || c._sp);
-      c._el.setText(base.elemento || '');
+      c._el.setText(nomeEl(base.elemento));
       if (c._img.clearTint) c._img.clearTint();
       scene.tweens.add({ targets: c, alpha: 1, duration: 280, ease: 'Back.out' });
       scene.tweens.add({ targets: c, y: cy - 10, yoyo: true, duration: 180 });
@@ -86,11 +89,11 @@ export function anteprimaSquadraCapo(scene, cb) {
  *  un cartello annuncia l'incontro. Al termine chiama `cb`. NON tocca il motore. */
 export function introBattaglia(scene, cb) {
   scene.avversario = new Lumino(scene, scene.W + 220, scene.posAvv.y, scene.cfgAvversario, { specchia: true })
-    .setScale(1.15).setDepth(100);
+    .setScale(scene.scAvv || 1.15).setDepth(100);
   if (audio.suono) audio.suono('lancio');
   scene.tweens.add({
     targets: scene.avversario, x: scene.posAvv.x, duration: 540, ease: 'Cubic.out',
-    onComplete: () => scene.tweens.add({ targets: scene.avversario, scaleX: 1.15 * 1.08, scaleY: 1.15 * 0.9, duration: 100, yoyo: true, ease: 'Quad.out' }),
+    onComplete: () => scene.tweens.add({ targets: scene.avversario, scaleX: (scene.scAvv || 1.15) * 1.08, scaleY: (scene.scAvv || 1.15) * 0.9, duration: 100, yoyo: true, ease: 'Quad.out' }),
   });
   const nome = (LUMINI[scene.cfgAvversario] || {}).nome || 'Lumino';
   // #59 — variante speciale: brillio dorato + suono + scintille sullo sprite.
@@ -156,7 +159,7 @@ export function scegliSchieramento(scene) {
   layer.add(scene.add.text(scene.W / 2, scene.H * 0.15, titolo, {
     fontFamily: 'system-ui, sans-serif', fontSize: '23px', color: '#ffd23f', fontStyle: 'bold', stroke: '#3a2c22', strokeThickness: 5, align: 'center',
   }).setOrigin(0.5));
-  if (avvEl) layer.add(scene.add.text(scene.W / 2, scene.H * 0.15 + 24, `avversario di tipo ${avvEl}`, {
+  if (avvEl) layer.add(scene.add.text(scene.W / 2, scene.H * 0.15 + 24, `avversario di tipo ${nomeEl(avvEl).toLowerCase()}`, {
     fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#fff', backgroundColor: '#00000055', padding: { x: 6, y: 2 },
   }).setOrigin(0.5));
 
@@ -174,7 +177,7 @@ export function scegliSchieramento(scene) {
     g.fillStyle(isPep ? 0xf0a830 : 0x6cb84f, 1); g.fillRoundedRect(cx - cw / 2, cy - ch / 2, cw, 34, { tl: 16, tr: 16, bl: 0, br: 0 });
     g.lineStyle(4, 0x4a3322, 1); g.strokeRoundedRect(cx - cw / 2, cy - ch / 2, cw, ch, 16);
     layer.add(g);
-    layer.add(scene.add.text(cx, cy - ch / 2 + 17, isPep ? 'Soccorso' : (base.elemento || 'Lumino'), { fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
+    layer.add(scene.add.text(cx, cy - ch / 2 + 17, isPep ? 'Soccorso' : (nomeEl(base.elemento) || 'Lumino'), { fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5));
     if (scene.textures.exists('lum-' + sp)) {
       const img = scene.add.image(cx, cy - 4, 'lum-' + sp);
       img.setScale(Math.min((cw - 26) / img.width, (ch - 80) / img.height));
@@ -185,7 +188,7 @@ export function scegliSchieramento(scene) {
     layer.add(scene.add.text(cx, cy + ch / 2 - 20, base.nome || sp, { fontFamily: 'system-ui, sans-serif', fontSize: '17px', color: '#4a3322', fontStyle: 'bold' }).setOrigin(0.5));
     // #74 — indizio sui tipi: stellina "consigliato" sul Lumino forte contro l'avversario.
     if (!isPep && avvEl && base.elemento && moltiplicatoreTipo(base.elemento, avvEl) === 1.5) {
-      const badge = scene.add.text(cx, cy - ch / 2 - 2, '⭐ forte!', { fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#1a3a0a', fontStyle: 'bold', backgroundColor: '#7ed957', padding: { x: 6, y: 2 } }).setOrigin(0.5);
+      const badge = scene.add.text(cx, cy - ch / 2 - 15, '⭐ forte!', { fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#1a3a0a', fontStyle: 'bold', backgroundColor: '#7ed957', padding: { x: 6, y: 2 } }).setOrigin(0.5);
       layer.add(badge);
       scene.tweens.add({ targets: badge, scale: 1.12, yoyo: true, repeat: -1, duration: 620, ease: 'Sine.inOut' });
     }
